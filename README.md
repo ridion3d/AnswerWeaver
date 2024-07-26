@@ -8,26 +8,23 @@ AnswerWeaver uses a YAML file to define questions and their associated text bloc
 
 ## Features
 
-- **Flexible and Customizable**: Customize the questions and text blocks by editing the YAML file.
-- **Markdown Support**: Use Markdown to format your questions and text blocks.
-- **Automatic Text Generation**: Create documents based on user responses.
-- **Web-Based Form**: User-friendly web interface for answering questions.
+- Flexible and Customizable: Customize the questions and text blocks by editing the YAML file.
+- Markdown Support: Use Markdown to format your questions and text blocks.
+- Automatic Text Generation: Create documents based on user responses.
+- Web-Based Form: User-friendly web interface for answering questions.
 
 ## Installation
 
 1. Clone the repository:
-   ```bash
    git clone https://github.com/username/AnswerWeaver.git
    cd AnswerWeaver
-   ```
 
-2. Open the `index.html` file in your preferred web browser.
+2. Open the index.html file in your preferred web browser.
 
 ## Usage
 
-1. Customize the `questions.yaml` file to suit your needs. Here is an example structure of the YAML file:
+1. Customize the questions.yaml file to suit your needs. Here is an example structure of the YAML file:
 
-   ```yaml
    title: "Personal Values Document"
    introduction: |
      **Welcome to the creation of your personal values document.**
@@ -47,15 +44,15 @@ AnswerWeaver uses a YAML file to define questions and their associated text bloc
            options:
              - id: option1
                label: "Option 1"
-               text_block: "I prefer option 1. **...**"
+               text_block: "I prefer option 1."
 
              - id: option2
                label: "Option 2"
-               text_block: "I prefer option 2. **...**"
+               text_block: "I prefer option 2."
 
              - id: option3
                label: "Option 3"
-               text_block: "I prefer option 3. **...**"
+               text_block: "I prefer option 3."
 
      - group_name: "Personal Values"
        questions:
@@ -65,15 +62,15 @@ AnswerWeaver uses a YAML file to define questions and their associated text bloc
            options:
              - id: value1
                label: "Value 1"
-               text_block: "Value 1 is important to me. **...**"
+               text_block: "Value 1 is important to me."
 
              - id: value2
                label: "Value 2"
-               text_block: "Value 2 is important to me. **...**"
+               text_block: "Value 2 is important to me."
 
              - id: value3
                label: "Value 3"
-               text_block: "Value 3 is important to me. **...**"
+               text_block: "Value 3 is important to me."
 
    outro_text: |
      **Confirmation of Values and Preferences**
@@ -85,7 +82,6 @@ AnswerWeaver uses a YAML file to define questions and their associated text bloc
      **Date:** [Date]
      
      **Signature:** ______________________
-   ```
 
 ## License
 
