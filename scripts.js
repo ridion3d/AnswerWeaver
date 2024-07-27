@@ -2,9 +2,10 @@ fetch('questions.yaml')
     .then(response => response.text())
     .then(text => {
         const doc = jsyaml.load(text);
-        document.getElementById('form-title').innerText = doc.title;
-        document.getElementById('form-introduction').innerHTML = marked(doc.introduction);
+        document.getElementById('main-title').innerText = doc.title;
+        document.getElementById('introduction').innerHTML = marked(doc.introduction);
         generateForm(doc.groups);
+        generateDocument(); // Initial document generation
     })
     .catch(error => console.log(error));
 
@@ -73,29 +74,35 @@ function generateDocument() {
             generatedText += marked(doc.intro_text);
 
             doc.groups.forEach(group => {
+                let groupText = '';
+
                 group.questions.forEach(question => {
                     if (question.type === 'multiple_choice') {
                         const selectedOption = document.querySelector(`input[name="${question.id}"]:checked`);
                         if (selectedOption) {
-                            generatedText += selectedOption.value + '\n';
+                            groupText += selectedOption.value + '\n';
                         }
                     } else if (question.type === 'checkbox') {
                         const selectedOptions = document.querySelectorAll(`input[name="${question.id}"]:checked`);
                         selectedOptions.forEach(option => {
-                            generatedText += option.value + '\n';
+                            groupText += option.value + '\n';
                         });
                     } else if (question.type === 'text') {
                         const textInput = document.querySelector(`textarea[name="${question.id}"]`);
                         if (textInput && textInput.value.trim() !== '') {
-                            generatedText += question.text_block.replace('[USER_INPUT]', textInput.value.trim()) + '\n';
+                            groupText += question.text_block.replace('[USER_INPUT]', textInput.value.trim()) + '\n';
                         }
                     }
                 });
+
+                if (groupText.trim() !== '') {
+                    generatedText += `### ${group.group_name}\n` + groupText;
+                }
             });
 
             generatedText += marked(doc.outro_text);
 
-            document.getElementById('generated-document').value = generatedText;
+            document.getElementById('result').value = generatedText;
         })
         .catch(error => console.log(error));
 }

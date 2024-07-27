@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,45 +9,47 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <link href="styles.css" rel="stylesheet">
 </head>
-<body>
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-12">
-            <h1 id="main-title"></h1>
-            <div id="introduction" class="mb-4"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <h2>Fragebogen</h2>
-            <form id="questionnaire"></form>
-        </div>
-        <div class="col-md-6">
-            <h2>Meine Wertevorstellungen</h2>
-            <textarea id="result" class="border p-3"></textarea>
-        </div>
-    </div>
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <h3>Links</h3>
-            <ul>
-                <li><a href="#link1">Link 1</a></li>
-                <li><a href="#link2">Link 2</a></li>
-                <li><a href="#link3">Link 3</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <h3>Impressum</h3>
-            <p>Hier finden Sie das Impressum der Website...</p>
-        </div>
-    </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<script src="scripts.js"></script>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 id="main-title"></h1>
+                <div id="introduction" class="mb-4"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Fragebogen</h2>
+                <form id="questionnaire" oninput="generateDocument()"></form>
+            </div>
+            <div class="col-md-6">
+                <h2>Meine Wertevorstellungen</h2>
+                <textarea id="result" class="border p-3"></textarea>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="#link1">Link 1</a></li>
+                    <li><a href="#link2">Link 2</a></li>
+                    <li><a href="#link3">Link 3</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <h3>Impressum</h3>
+                <p>Hier finden Sie das Impressum der Website...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script src="scripts.js"></script>
 </body>
+
 </html>
