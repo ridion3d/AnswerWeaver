@@ -1,108 +1,163 @@
-fetch('questions.yaml')
-    .then(response => response.text())
-    .then(text => {
-        const doc = jsyaml.load(text);
-        document.getElementById('main-title').innerText = doc.title;
-        document.getElementById('introduction').innerHTML = marked(doc.introduction);
-        generateForm(doc.groups);
-        generateDocument(); // Initial document generation
-    })
-    .catch(error => console.log(error));
+// Initialize SimpleMDE
+var simplemde = new SimpleMDE({
+    element: document.getElementById("result"),
+    initialValue: ""
+});
 
-function generateForm(groups) {
-    const form = document.getElementById('questionnaire');
+let allGroups = [];
+let introText = '';
+let outroText = '';
+
+// Load YAML file
+fetch('questions.yaml')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.text();
+    })
+    .then(yamlText => {
+        const data = jsyaml.load(yamlText);
+        displayIntroduction(data);
+        allGroups = data.groups;
+        introText = data.intro_text || '';
+        outroText = data.outro_text || '';
+        createQuestionnaire(data.groups);
+    })
+    .catch(error => console.error('Error fetching the YAML file:', error));
+
+// Display title and introduction
+function displayIntroduction(data) {
+    document.getElementById('main-title').innerText = data.title;
+    document.getElementById('introduction').innerHTML = marked.parse(data.introduction);
+}
+
+// Create questionnaire form
+function createQuestionnaire(groups, parentDiv = document.getElementById('questionnaire'), level = 1) {
     groups.forEach(group => {
         const groupDiv = document.createElement('div');
-        groupDiv.classList.add('group');
+        groupDiv.classList.add('mb-4', `pl-${level * 2}`);
+        groupDiv.innerHTML = `<h${level + 3}>${group.group_name}</h${level + 3}>`;
 
-        const groupTitle = document.createElement('h3');
-        groupTitle.innerText = group.group_name;
-        groupDiv.appendChild(groupTitle);
+        if (group.questions) {
+            group.questions.forEach(question => {
+                appendQuestion(groupDiv, question);
+            });
+        }
 
-        group.questions.forEach(question => {
-            const questionDiv = document.createElement('div');
-            questionDiv.classList.add('question');
+        if (group.groups) {
+            createQuestionnaire(group.groups, groupDiv, level + 1);
+        }
 
-            const questionLabel = document.createElement('label');
-            questionLabel.innerText = question.question;
-            questionDiv.appendChild(questionLabel);
+        parentDiv.appendChild(groupDiv);
+    });
 
-            if (question.type === 'multiple_choice') {
-                question.options.forEach(option => {
-                    const optionLabel = document.createElement('label');
-                    const optionInput = document.createElement('input');
-                    optionInput.type = 'radio';
-                    optionInput.name = question.id;
-                    optionInput.value = option.text_block;
-                    optionLabel.appendChild(optionInput);
-                    optionLabel.appendChild(document.createTextNode(option.label));
-                    questionDiv.appendChild(optionLabel);
-                });
-            } else if (question.type === 'checkbox') {
-                question.options.forEach(option => {
-                    const optionLabel = document.createElement('label');
-                    const optionInput = document.createElement('input');
-                    optionInput.type = 'checkbox';
-                    optionInput.name = question.id;
-                    optionInput.value = option.text_block;
-                    optionLabel.appendChild(optionInput);
-                    optionLabel.appendChild(document.createTextNode(option.label));
-                    questionDiv.appendChild(optionLabel);
-                });
-            } else if (question.type === 'text') {
-                const textInput = document.createElement('textarea');
-                textInput.name = question.id;
-                textInput.rows = 4;
-                textInput.cols = 50;
-                questionDiv.appendChild(textInput);
-            }
+    if (level === 1) {
+        generateFullText(); // Initial text generation
+    }
+}
 
-            groupDiv.appendChild(questionDiv);
+// Helper function to append questions
+function appendQuestion(parentDiv, question) {
+    const div = document.createElement('div');
+    div.classList.add('form-group', 'label-group');
+    div.innerHTML = `<label>${marked.parse(question.question)}</label>`;
+
+    if (question.type === 'multiple_choice') {
+        question.options.forEach(option => {
+            div.innerHTML += `
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.text_block}">
+                    <label class="form-check-label" for="${option.id}">${option.label}</label>
+                </div>
+            `;
         });
+    } else if (question.type === 'checkbox') {
+        question.options.forEach(option => {
+            div.innerHTML += `
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="${question.id}" id="${option.id}" value="${option.text_block}">
+                    <label class="form-check-label" for="${option.id}">${option.label}</label>
+                </div>
+            `;
+        });
+    } else if (question.type === 'text') {
+        const textInput = document.createElement('textarea');
+        textInput.name = question.id;
+        textInput.rows = 4;
+        textInput.cols = 50;
+        div.appendChild(textInput);
+        textInput.addEventListener('input', () => generateFullText()); // Add input event listener
+    }
 
-        form.appendChild(groupDiv);
+    parentDiv.appendChild(div);
+
+    // Add event listeners to update the text on change
+    const inputs = div.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('change', () => generateFullText());
     });
 }
 
-function generateDocument() {
-    fetch('questions.yaml')
-        .then(response => response.text())
-        .then(text => {
-            const doc = jsyaml.load(text);
-            let generatedText = '';
+// Generate full text including intro and outro
+function generateFullText() {
+    let text = introText ? `${introText}\n\n` : '';
+    text += generateText(allGroups);
+    if (outroText) {
+        text += `\n\n${outroText}`;
+    }
 
-            generatedText += marked(doc.intro_text);
+    simplemde.value(text); // Set the generated text in the SimpleMDE editor
 
-            doc.groups.forEach(group => {
-                let groupText = '';
+    // Toggle preview mode to ensure rendering
+    simplemde.togglePreview();
 
-                group.questions.forEach(question => {
-                    if (question.type === 'multiple_choice') {
-                        const selectedOption = document.querySelector(`input[name="${question.id}"]:checked`);
-                        if (selectedOption) {
-                            groupText += selectedOption.value + '\n';
-                        }
-                    } else if (question.type === 'checkbox') {
-                        const selectedOptions = document.querySelectorAll(`input[name="${question.id}"]:checked`);
-                        selectedOptions.forEach(option => {
-                            groupText += option.value + '\n';
-                        });
-                    } else if (question.type === 'text') {
-                        const textInput = document.querySelector(`textarea[name="${question.id}"]`);
-                        if (textInput && textInput.value.trim() !== '') {
-                            groupText += question.text_block.replace('[USER_INPUT]', textInput.value.trim()) + '\n';
-                        }
+    // Check if the editor is in preview mode, if not toggle it to preview mode
+    if (!simplemde.isPreviewActive()) {
+        simplemde.togglePreview(); // First toggle to preview mode
+    }
+}
+
+// Generate text based on answers
+function generateText(groups, level = 1) {
+    const form = document.getElementById('questionnaire');
+    let text = '';
+
+    groups.forEach(group => {
+        let groupText = `${'#'.repeat(level + 2)} ${group.group_name}\n\n`;
+        const formData = new FormData(form);
+        let hasContent = false;
+
+        if (group.questions) {
+            group.questions.forEach(question => {
+                const values = formData.getAll(question.id);
+                if (values.length > 0) {
+                    hasContent = true;
+                    values.forEach(value => {
+                        groupText += `${value}\n\n`;
+                    });
+                } else if (question.type === 'text') {
+                    const textInput = form.querySelector(`textarea[name="${question.id}"]`);
+                    if (textInput && textInput.value.trim() !== '') {
+                        hasContent = true;
+                        groupText += question.text_block.replace('[USER_INPUT]', textInput.value.trim()) + '\n\n';
                     }
-                });
-
-                if (groupText.trim() !== '') {
-                    generatedText += `### ${group.group_name}\n` + groupText;
                 }
             });
+        }
 
-            generatedText += marked(doc.outro_text);
+        if (group.groups) {
+            const subGroupText = generateText(group.groups, level + 1);
+            if (subGroupText) {
+                groupText += subGroupText;
+                hasContent = true;
+            }
+        }
 
-            document.getElementById('result').value = generatedText;
-        })
-        .catch(error => console.log(error));
+        if (hasContent) {
+            text += groupText;
+        }
+    });
+
+    return text;
 }
