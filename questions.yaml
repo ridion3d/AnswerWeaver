@@ -45,6 +45,13 @@ groups:
             label: "Value 3"
             text_block: "Value 3 is important to me."
 
+  - group_name: "Additional Comments"
+    questions:
+      - id: q3
+        question: "Please provide any additional comments or information:"
+        type: text
+        text_block: "Additional comments: [USER_INPUT]"
+        
 outro_text: |
   **Confirmation of Values and Preferences**
   
