@@ -67,7 +67,7 @@ function appendQuestion(parentDiv, question) {
         question.options.forEach(option => {
             div.innerHTML += `
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.text_block}">
+                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.id}">
                     <label class="form-check-label" for="${option.id}">${option.label}</label>
                 </div>
             `;
@@ -76,7 +76,7 @@ function appendQuestion(parentDiv, question) {
         question.options.forEach(option => {
             div.innerHTML += `
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="${question.id}" id="${option.id}" value="${option.text_block}">
+                    <input class="form-check-input" type="checkbox" name="${question.id}" id="${option.id}" value="${option.id}">
                     <label class="form-check-label" for="${option.id}">${option.label}</label>
                 </div>
             `;
@@ -139,14 +139,17 @@ function generateText(groups, level = 1) {
                     if (values.length > 0) {
                         hasContent = true;
                         values.forEach(value => {
-                            if (question.pre_text) {
-                                groupText += question.pre_text;
+                            const selectedOption = question.options.find(option => option.id === value);
+                            if (selectedOption) {
+                                if (question.pre_text) {
+                                    groupText += question.pre_text;
+                                }
+                                groupText += selectedOption.text_block;
+                                if (question.post_text) {
+                                    groupText += question.post_text;
+                                }
+                                groupText += '\n\n';
                             }
-                            groupText += value;
-                            if (question.post_text) {
-                                groupText += question.post_text;
-                            }
-                            groupText += '\n\n';
                         });
                     }
                 } else if (question.type === 'text') {
