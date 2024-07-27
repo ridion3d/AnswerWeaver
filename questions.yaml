@@ -57,7 +57,7 @@ groups:
         type: text
         pre_text: "Feel free to add any additional comments below:"
         post_text: "Thank you for providing your comments."
-        text_block: "Additional comments: [USER_INPUUT]"
+        text_block: "Additional comments: [USER_INPUT]"
         
 outro_text: |
   **Confirmation of Values and Preferences**
