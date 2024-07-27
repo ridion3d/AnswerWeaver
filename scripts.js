@@ -136,14 +136,26 @@ function generateText(groups, level = 1) {
                 const values = formData.getAll(question.id);
                 if (values.length > 0) {
                     hasContent = true;
+                    if (question.pre_text) {
+                        groupText += `${question.pre_text}\n\n`;
+                    }
                     values.forEach(value => {
                         groupText += `${value}\n\n`;
                     });
+                    if (question.post_text) {
+                        groupText += `${question.post_text}\n\n`;
+                    }
                 } else if (question.type === 'text') {
                     const textInput = form.querySelector(`textarea[name="${question.id}"]`);
                     if (textInput && textInput.value.trim() !== '') {
                         hasContent = true;
+                        if (question.pre_text) {
+                            groupText += `${question.pre_text}\n\n`;
+                        }
                         groupText += question.text_block.replace('[USER_INPUT]', textInput.value.trim()) + '\n\n';
+                        if (question.post_text) {
+                            groupText += `${question.post_text}\n\n`;
+                        }
                     }
                 }
             });
