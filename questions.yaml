@@ -15,6 +15,8 @@ groups:
       - id: q1
         question: "What are your general preferences?"
         type: multiple_choice
+        pre_text: "This is an optional introductory text before the options."
+        post_text: "This is an optional concluding text after the selected option."
         options:
           - id: option1
             label: "Option 1"
@@ -53,6 +55,8 @@ groups:
       - id: q3
         question: "Please provide any additional comments or information:"
         type: text
+        pre_text: "Feel free to add any additional comments below:"
+        post_text: "Thank you for providing your comments."
         text_block: "Additional comments: [USER_INPUT]"
         
 outro_text: |
