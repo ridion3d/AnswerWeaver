@@ -124,7 +124,10 @@ function generateText(groups, level = 1) {
     let text = '';
 
     groups.forEach(group => {
-        let groupText = `${'#'.repeat(level + 2)} ${group.group_name}\n\n`;
+        let groupText = '';
+        if (group.show_group_name !== false) {
+            groupText += `${'#'.repeat(level + 2)} ${group.group_name}\n\n`;
+        }
         const formData = new FormData(form);
         let hasContent = false;
 
