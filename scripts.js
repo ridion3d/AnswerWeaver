@@ -134,30 +134,33 @@ function generateText(groups, level = 1) {
         if (group.questions) {
             group.questions.forEach(question => {
                 const values = formData.getAll(question.id);
-                if (values.length > 0) {
-                    hasContent = true;
-                    values.forEach(value => {
-                        if (question.pre_text) {
-                            groupText += `${question.pre_text}`;
-                        }
-                        groupText += `${value}`;
-                        if (question.post_text) {
-                            groupText += `${question.post_text}`;
-                        }
-                        groupText += `\n\n`;
-                    });
+
+                if (question.type === 'multiple_choice' || question.type === 'checkbox') {
+                    if (values.length > 0) {
+                        hasContent = true;
+                        values.forEach(value => {
+                            if (question.pre_text) {
+                                groupText += question.pre_text;
+                            }
+                            groupText += value;
+                            if (question.post_text) {
+                                groupText += question.post_text;
+                            }
+                            groupText += '\n\n';
+                        });
+                    }
                 } else if (question.type === 'text') {
                     const textInput = form.querySelector(`textarea[name="${question.id}"]`);
                     if (textInput && textInput.value.trim() !== '') {
                         hasContent = true;
                         if (question.pre_text) {
-                            groupText += `${question.pre_text}`;
+                            groupText += question.pre_text;
                         }
                         groupText += question.text_block.replace('[USER_INPUT]', textInput.value.trim());
                         if (question.post_text) {
-                            groupText += `${question.post_text}`;
+                            groupText += question.post_text;
                         }
-                        groupText += `\n\n`;
+                        groupText += '\n\n';
                     }
                 }
             });
