@@ -46,11 +46,9 @@ groups:
           - id: option1
             label: "Ja"
             text_block: "möchte ich, dass alle möglichen lebensverlängernden Maßnahmen ergriffen werden."
-            default: false
           - id: option2
             label: "Nein"
             text_block: "möchte ich keine lebensverlängernden Maßnahmen erhalten."
-            default: true
         none_option: "Nichts von allem"
 
       - id: schmerzbehandlung
@@ -64,7 +62,6 @@ groups:
           - id: option2
             label: "Nein"
             text_block: "Ich möchte keine Schmerzbehandlung, wenn dies den Todeseintritt beschleunigen könnte."
-            default: false
         none_option: "Nichts von allem"
 
   - group_name: "Sonstige Wünsche"
@@ -81,7 +78,6 @@ groups:
           - id: option2
             label: "Nein"
             text_block: "Ich bin nicht mit einer Organspende einverstanden."
-            default: false
         none_option: "Nichts von allem"
 
       - id: weitere_wuensche
