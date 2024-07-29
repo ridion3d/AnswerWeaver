@@ -1,0 +1,142 @@
+friendly_name: "Patientenverfügung Beispiel"
+title: "Patientenverfügung"
+introduction: |
+  **Patientenverfügung von [first_name] [last_name]**
+
+  Diese Patientenverfügung dient dazu, meinen Willen bezüglich medizinischer Behandlungen festzulegen, falls ich nicht mehr in der Lage sein sollte, selbst Entscheidungen zu treffen. Bitte berücksichtigen Sie meine nachstehenden Wünsche und Anweisungen.
+
+intro_text: |
+  **Patientenverfügung**
+
+  Ich, [first_name] [last_name], geboren am [birth_date] in [birth_place], erkläre hiermit meinen Willen bezüglich medizinischer Behandlungen für den Fall, dass ich nicht mehr in der Lage sein sollte, selbst Entscheidungen zu treffen.
+
+section_titles:
+  questionnaire: "Fragebogen"
+  generated_text: "Generierter Text"
+
+groups:
+  - group_name: "Persönliche Informationen"
+    show_group_name: true
+    questions:
+      - id: first_name
+        question: "Vorname:"
+        type: text
+        multiline: false
+        text_block: "Vorname:\n**[USER_INPUT]**"
+        placeholder: "Max"
+
+      - id: last_name
+        question: "Nachname:"
+        type: text
+        multiline: false
+        text_block: "Nachname:\n**[USER_INPUT]**"
+        placeholder: "Mustermann"
+
+      - id: birth_date
+        question: "Geburtsdatum:"
+        type: text
+        multiline: false
+        text_block: "Geburtsdatum:\n**[USER_INPUT]**"
+        placeholder: "01.01.1970"
+
+      - id: birth_place
+        question: "Geburtsort:"
+        type: text
+        multiline: false
+        text_block: "Geburtsort:\n**[USER_INPUT]**"
+        placeholder: "Berlin"
+
+      - id: same_as_birth_place
+        question: "Ist Ihr Wohnort derselbe wie Ihr Geburtsort?"
+        type: multiple_choice
+        options:
+          - id: same_yes
+            label: "Ja"
+            text_block: ""
+            default: true
+          - id: same_no
+            label: "Nein"
+            text_block: ""
+
+      - id: residence_place
+        question: "Wohnort:"
+        type: text
+        multiline: false
+        text_block: "Wohnort:\n**[USER_INPUT]**"
+        default_from: birth_place
+        conditions:
+          - id: same_as_birth_place
+            value: same_no
+
+  - group_name: "Behandlungswünsche"
+    show_group_name: true
+    questions:
+      - id: lebenserhaltende_massnahmen
+        question: "Wünschen Sie lebensverlängernde Maßnahmen?"
+        type: multiple_choice
+        pre_text: "In Situationen, in denen keine Aussicht auf Besserung besteht, "
+        post_text: " Dies ist mein ausdrücklicher Wille."
+        options:
+          - id: option1
+            label: "Ja"
+            text_block: "möchte ich, dass alle möglichen lebensverlängernden Maßnahmen ergriffen werden."
+          - id: option2
+            label: "Nein"
+            text_block: "möchte ich keine lebensverlängernden Maßnahmen erhalten."
+
+      - id: schmerzbehandlung
+        question: "Soll eine Schmerzbehandlung durchgeführt werden, auch wenn dies den Todeseintritt beschleunigen könnte?"
+        type: multiple_choice
+        options:
+          - id: option1
+            label: "Ja"
+            text_block: "Ich möchte, dass eine Schmerzbehandlung durchgeführt wird, selbst wenn dies den Todeseintritt beschleunigen könnte."
+            default: true
+          - id: option2
+            label: "Nein"
+            text_block: "Ich möchte keine Schmerzbehandlung, wenn dies den Todeseintritt beschleunigen könnte."
+        none_option: "Nichts von allem"
+
+  - group_name: "Sonstige Wünsche"
+    show_group_name: true
+    questions:
+      - id: organspende
+        question: "Sind Sie mit einer Organspende einverstanden?"
+        type: multiple_choice
+        options:
+          - id: option1
+            label: "Ja"
+            text_block: "Ich bin mit einer Organspende einverstanden."
+            default: true
+          - id: option2
+            label: "Nein"
+            text_block: "Ich bin nicht mit einer Organspende einverstanden."
+        none_option: "Nichts von allem"
+
+      - id: spezielle_wuensche_organspende
+        question: "Bitte geben Sie spezielle Wünsche zur Organspende an:"
+        type: text
+        multiline: true
+        text_block: "Spezielle Wünsche zur Organspende: [USER_INPUT]"
+        placeholder: "Spezielle Wünsche hier eingeben"
+        conditions:
+          - id: organspende
+            value: option1
+
+      - id: weitere_wuensche
+        question: "Gibt es weitere Wünsche oder Anmerkungen?"
+        type: text
+        multiline: true
+        text_block: "Weitere Wünsche: [USER_INPUT]"
+        placeholder: "Weitere Wünsche hier eingeben"
+
+outro_text: |
+  **Bestätigung**
+
+  Hiermit bestätige ich, [first_name] [last_name], dass ich diese Patientenverfügung im Vollbesitz meiner geistigen Kräfte und aus freiem Willen erstellt habe. Diese Verfügung soll ab dem heutigen Datum [current_date] gültig sein.
+
+  **Ort:** [residence_place]
+  
+  **Datum:** [current_date]
+  
+  **Unterschrift:** ______________________
