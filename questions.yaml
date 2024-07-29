@@ -79,6 +79,16 @@ groups:
             text_block: "Ich bin nicht mit einer Organspende einverstanden."
         none_option: "Nichts von allem"
 
+      - id: spezielle_wuensche_organspende
+        question: "Bitte geben Sie spezielle Wünsche zur Organspende an:"
+        type: text
+        multiline: true
+        text_block: "Spezielle Wünsche zur Organspende: [USER_INPUT]"
+        placeholder: "Spezielle Wünsche hier eingeben"
+        conditions:
+          - id: organspende
+            value: option1
+
       - id: weitere_wuensche
         question: "Gibt es weitere Wünsche oder Anmerkungen?"
         type: text
