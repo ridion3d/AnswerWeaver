@@ -48,6 +48,11 @@ function fetchYAML(url) {
                 option.textContent = data.friendly_name || option.textContent;
             }
 
+            // Set titles for questionnaire and generated text with defaults if not provided
+            const sectionTitles = data.section_titles || {};
+            document.getElementById('questionnaire-title').innerHTML = marked.parse(sectionTitles.questionnaire || 'Questionnaire');
+            document.getElementById('generated-text-title').innerHTML = marked.parse(sectionTitles.generated_text || 'Generated Text');
+
             createQuestionnaire(data.groups);
             checkConditions(); // Check conditions after creating the questionnaire
             generateFullText(); // Generate initial text with default values
@@ -59,6 +64,8 @@ function fetchYAML(url) {
 function resetForm() {
     document.getElementById('main-title').innerText = '';
     document.getElementById('introduction').innerHTML = '';
+    document.getElementById('questionnaire-title').innerText = 'Questionnaire';
+    document.getElementById('generated-text-title').innerText = 'Generated Text';
     document.getElementById('questionnaire').innerHTML = '';
     simplemde.value(''); // Clear the SimpleMDE editor
 }
