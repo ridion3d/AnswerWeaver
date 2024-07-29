@@ -63,7 +63,7 @@ function appendQuestion(parentDiv, question) {
     div.classList.add('form-group', 'label-group');
     div.setAttribute('data-question-id', question.id);
     div.setAttribute('data-conditions', JSON.stringify(question.conditions || []));
-    div.style.display = question.conditions && question.conditions.length > 0 ? 'none' : 'block'; // Show initially if no conditions
+    div.style.display = 'none'; // Initially hide until conditions are checked
 
     div.innerHTML = `<label>${marked.parse(question.question)}</label>`;
 
@@ -138,11 +138,21 @@ function appendQuestion(parentDiv, question) {
     });
 
     // Check conditions initially
-    checkConditions();
+    setTimeout(checkConditions, 0); // Ensure conditions are checked after initial render
 }
 
 // Initial call to check conditions after loading the form
 document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('questionnaire');
+    const questions = form.querySelectorAll('[data-question-id]');
+
+    questions.forEach(questionDiv => {
+        const conditions = JSON.parse(questionDiv.getAttribute('data-conditions'));
+        if (conditions.length === 0) {
+            questionDiv.style.display = 'block';
+        }
+    });
+
     checkConditions();
     generateFullText(); // Generate initial text with default values
 });
@@ -182,8 +192,6 @@ function checkConditions() {
         questionDiv.style.display = showQuestion ? 'block' : 'none';
     });
 }
-
-
 
 
 // Generate full text including intro and outro
