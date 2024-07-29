@@ -19,6 +19,7 @@ function handleURL(url) {
     if (isGitHubRepo(url)) {
         fetchRepoFiles(url);
     } else {
+        document.getElementById('dropdown-container').style.display = 'none'; // Hide dropdown if not a repo
         fetchYAML(url);
     }
 }
@@ -36,12 +37,7 @@ function fetchRepoFiles(repoUrl) {
         .then(response => response.json())
         .then(files => {
             const yamlFiles = files.filter(file => file.name.endsWith('.yaml') || file.name.endsWith('.yml'));
-            const select = document.createElement('select');
-            select.id = 'yaml-files';
-            select.className = 'form-control';
-            select.style.display = 'block';
-            document.querySelector('.container').insertBefore(select, document.querySelector('.row'));
-
+            const select = document.getElementById('yaml-files');
             select.innerHTML = '';
             yamlFiles.forEach((file, index) => {
                 const option = document.createElement('option');
@@ -61,6 +57,8 @@ function fetchRepoFiles(repoUrl) {
                     fetchYAML(selectedUrl);
                 }
             });
+
+            document.getElementById('dropdown-container').style.display = 'block'; // Show dropdown
         })
         .catch(error => console.error('Error fetching the repository files:', error));
 }
