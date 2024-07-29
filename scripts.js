@@ -54,6 +54,7 @@ function createQuestionnaire(groups, parentDiv = document.getElementById('questi
 
     if (level === 1) {
         generateFullText(); // Initial text generation
+        checkConditions(); // Initial check for conditions
     }
 }
 
@@ -169,15 +170,14 @@ function checkConditions() {
             return;
         }
 
-        let showQuestion = true;
-        conditions.forEach(condition => {
+        let showQuestion = conditions.every(condition => {
             const conditionInput = form.querySelector(`[name="${condition.id}"]`);
+            if (!conditionInput) return false;
+
             if (conditionInput.type === 'radio' || conditionInput.type === 'checkbox') {
-                if (!conditionInput.checked && condition.value === conditionInput.value) {
-                    showQuestion = false;
-                }
-            } else if (conditionInput.value !== condition.value) {
-                showQuestion = false;
+                return conditionInput.checked && condition.value === conditionInput.value;
+            } else {
+                return conditionInput.value === condition.value;
             }
         });
 
