@@ -133,11 +133,8 @@ function appendQuestion(parentDiv, question) {
                 defaultFromInput.addEventListener('input', updateDefault);
                 textInput.addEventListener('input', () => {
                     textInput.dataset.userChanged = 'true';
-                    generateFullText();
                 });
             }
-        } else {
-            textInput.addEventListener('input', () => generateFullText()); // Add input event listener
         }
 
         div.appendChild(textInput);
