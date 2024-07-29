@@ -230,7 +230,7 @@ function collectAnswers(groups, level = 1) {
 
 
 // Generate text based on answers
-function generateText(groups, answers, level = 1) {
+function generateText(groups, answers, placeholders, level = 1) {
     const form = document.getElementById('questionnaire');
     let text = '';
 
@@ -253,7 +253,7 @@ function generateText(groups, answers, level = 1) {
                                 }
                                 let textBlock = selectedOption.text_block;
                                 // Replace placeholders
-                                textBlock = replacePlaceholders(textBlock, answers);
+                                textBlock = replacePlaceholders(textBlock, answers, placeholders);
                                 groupText += textBlock;
                                 if (question.post_text) {
                                     groupText += question.post_text;
@@ -270,7 +270,7 @@ function generateText(groups, answers, level = 1) {
                         }
                         let textBlock = question.text_block.replace('[USER_INPUT]', textInput.value.trim());
                         // Replace placeholders
-                        textBlock = replacePlaceholders(textBlock, answers);
+                        textBlock = replacePlaceholders(textBlock, answers, placeholders);
                         groupText += textBlock;
                         if (question.post_text) {
                             groupText += question.post_text;
@@ -282,7 +282,7 @@ function generateText(groups, answers, level = 1) {
         }
 
         if (group.groups) {
-            const subGroupText = generateText(group.groups, answers, level + 1);
+            const subGroupText = generateText(group.groups, answers, placeholders, level + 1);
             if (subGroupText) {
                 groupText += subGroupText;
             }
@@ -295,3 +295,4 @@ function generateText(groups, answers, level = 1) {
 
     return text;
 }
+
