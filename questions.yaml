@@ -51,6 +51,7 @@ groups:
             label: "Nein"
             text_block: "möchte ich keine lebensverlängernden Maßnahmen erhalten."
             default: true
+        none_option: "Nichts von allem"
 
       - id: schmerzbehandlung
         question: "Soll eine Schmerzbehandlung durchgeführt werden, auch wenn dies den Todeseintritt beschleunigen könnte?"
@@ -64,6 +65,7 @@ groups:
             label: "Nein"
             text_block: "Ich möchte keine Schmerzbehandlung, wenn dies den Todeseintritt beschleunigen könnte."
             default: false
+        none_option: "Nichts von allem"
 
   - group_name: "Sonstige Wünsche"
     show_group_name: true
@@ -80,21 +82,7 @@ groups:
             label: "Nein"
             text_block: "Ich bin nicht mit einer Organspende einverstanden."
             default: false
+        none_option: "Nichts von allem"
 
       - id: weitere_wuensche
-        question: "Gibt es weitere Wünsche oder Anmerkungen?"
-        type: text
-        multiline: true
-        text_block: "Weitere Wünsche: [USER_INPUT]"
-        placeholder: "Weitere Wünsche hier eingeben"
-
-outro_text: |
-  **Bestätigung**
-
-  Hiermit bestätige ich, [first_name] [last_name], dass ich diese Patientenverfügung im Vollbesitz meiner geistigen Kräfte und aus freiem Willen erstellt habe. Diese Verfügung soll ab dem heutigen Datum [current_date] gültig sein.
-
-  **Ort:** [place]
-  
-  **Datum:** [current_date]
-  
-  **Unterschrift:** ______________________
+ 
