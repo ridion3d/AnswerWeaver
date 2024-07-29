@@ -77,7 +77,7 @@ function appendQuestion(parentDiv, question) {
             }
             div.innerHTML += `
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.id}" ${checked} ${option.default ? 'data-default="true"' : ''}>
+                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.text_block}" ${checked} ${option.default ? 'data-default="true"' : ''}>
                     <label class="form-check-label" for="${option.id}">${option.label}</label>
                 </div>
             `;
@@ -96,7 +96,7 @@ function appendQuestion(parentDiv, question) {
         question.options.forEach(option => {
             div.innerHTML += `
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="${question.id}" id="${option.id}" value="${option.id}" ${option.default ? 'checked' : ''}>
+                    <input class="form-check-input" type="checkbox" name="${question.id}" id="${option.id}" value="${option.text_block}" ${option.default ? 'checked' : ''}>
                     <label class="form-check-label" for="${option.id}">${option.label}</label>
                 </div>
             `;
@@ -239,24 +239,40 @@ function generateText(groups, form, level = 1) {
 
         if (group.questions) {
             group.questions.forEach(question => {
-                const questionElement = form.querySelector(`[name="${question.id}"]`);
-                let questionValue = questionElement ? questionElement.value.trim() : '';
-
-                if (questionValue) {
-                    if (question.pre_text) {
-                        groupText += question.pre_text;
+                const values = form.querySelectorAll(`[name="${question.id}"]:checked`);
+                if (question.type === 'multiple_choice' || question.type === 'checkbox') {
+                    if (values.length > 0) {
+                        values.forEach(value => {
+                            if (question.pre_text) {
+                                groupText += question.pre_text;
+                            }
+                            let textBlock = value.value;
+                            // Replace tokens
+                            textBlock = replaceTokens(textBlock, form);
+                            groupText += textBlock;
+                            if (question.post_text) {
+                                groupText += question.post_text;
+                            }
+                            groupText += '\n\n';
+                            hasContent = true;
+                        });
                     }
-                    if (question.text_block) {
-                        let textBlock = question.text_block.replace('[USER_INPUT]', questionValue);
+                } else if (question.type === 'text') {
+                    const textInput = form.querySelector(`textarea[name="${question.id}"], input[name="${question.id}"]`);
+                    if (textInput && textInput.value.trim() !== '') {
+                        if (question.pre_text) {
+                            groupText += question.pre_text;
+                        }
+                        let textBlock = question.text_block.replace('[USER_INPUT]', textInput.value.trim());
                         // Replace tokens
                         textBlock = replaceTokens(textBlock, form);
                         groupText += textBlock;
+                        if (question.post_text) {
+                            groupText += question.post_text;
+                        }
+                        groupText += '\n\n';
+                        hasContent = true;
                     }
-                    if (question.post_text) {
-                        groupText += question.post_text;
-                    }
-                    groupText += '\n\n';
-                    hasContent = true;
                 }
             });
         }
