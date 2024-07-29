@@ -1,3 +1,13 @@
+// Initialize SimpleMDE
+var simplemde = new SimpleMDE({
+    element: document.getElementById("result"),
+    initialValue: ""
+});
+
+let allGroups = [];
+let introText = '';
+let outroText = '';
+
 document.getElementById('load-url').addEventListener('click', () => {
     const url = document.getElementById('url-input').value;
     if (url) {
