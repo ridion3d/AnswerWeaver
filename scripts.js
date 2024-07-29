@@ -198,14 +198,21 @@ function replaceTokens(text, form) {
         const defaultFrom = inputElement.getAttribute('data-default-from');
         if (defaultFrom) {
             const defaultFromElement = form.querySelector(`[name="${defaultFrom}"]`);
-            value = defaultFromElement ? defaultFromElement.value.trim() : '';
-            if (value) return value;
+            if (defaultFromElement) {
+                // Überprüfen, ob der Benutzer einen Wert im defaultFrom-Element eingegeben hat
+                value = defaultFromElement.value.trim();
+                if (value) return value;
+
+                // Verwenden des Platzhalters des defaultFrom-Elements, wenn kein anderer Wert gefunden wurde
+                return defaultFromElement.placeholder || '';
+            }
         }
 
         // Verwenden des Platzhalters, wenn kein anderer Wert gefunden wurde
         return inputElement.placeholder || '';
     });
 }
+
 
 // Generate full text including intro and outro
 function generateFullText() {
