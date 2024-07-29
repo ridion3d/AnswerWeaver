@@ -39,12 +39,21 @@ function fetchYAML(url) {
             allGroups = data.groups;
             introText = data.intro_text || '';
             outroText = data.outro_text || '';
+
+            // Update dropdown with friendly name or file name
+            const select = document.getElementById('yaml-files');
+            const option = select.querySelector(`option[value="${url}"]`);
+            if (option) {
+                option.textContent = data.friendly_name || option.textContent;
+            }
+
             createQuestionnaire(data.groups);
             checkConditions(); // Check conditions after creating the questionnaire
             generateFullText(); // Generate initial text with default values
         })
         .catch(error => console.error('Error fetching the YAML file:', error));
 }
+
 
 // Fetch YAML files from GitHub repo
 function fetchRepoFiles(repoUrl) {
@@ -55,11 +64,16 @@ function fetchRepoFiles(repoUrl) {
             const yamlFiles = files.filter(file => file.name.endsWith('.yaml') || file.name.endsWith('.yml'));
             const select = document.getElementById('yaml-files');
             select.innerHTML = '';
-            yamlFiles.forEach(file => {
+            yamlFiles.forEach((file, index) => {
                 const option = document.createElement('option');
                 option.value = file.download_url;
-                option.textContent = file.name;
+                option.textContent = file.name; // Temporärer Text, bis die Datei geladen wird
                 select.appendChild(option);
+
+                // Automatically load the first YAML file
+                if (index === 0) {
+                    fetchYAML(file.download_url);
+                }
             });
             select.style.display = 'block';
         })
@@ -72,6 +86,8 @@ function fetchRepoFiles(repoUrl) {
         }
     });
 }
+
+
 
 
 // Display title and introduction
