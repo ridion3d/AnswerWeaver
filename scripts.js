@@ -169,6 +169,13 @@ function checkConditions() {
 }
 
 // Initial call to check conditions after loading the form
+document.addEventListener('DOMContentLoaded', () => {
+    checkConditions();
+    generateFullText(); // Generate initial text with default values
+});
+
+
+// Initial call to check conditions after loading the form
 document.addEventListener('DOMContentLoaded', checkConditions);
 
 
