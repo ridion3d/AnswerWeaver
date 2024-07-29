@@ -85,4 +85,19 @@ groups:
         none_option: "Nichts von allem"
 
       - id: weitere_wuensche
- 
+        question: "Gibt es weitere Wünsche oder Anmerkungen?"
+        type: text
+        multiline: true
+        text_block: "Weitere Wünsche: [USER_INPUT]"
+        placeholder: "Weitere Wünsche hier eingeben"
+
+outro_text: |
+  **Bestätigung**
+
+  Hiermit bestätige ich, [first_name] [last_name], dass ich diese Patientenverfügung im Vollbesitz meiner geistigen Kräfte und aus freiem Willen erstellt habe. Diese Verfügung soll ab dem heutigen Datum [current_date] gültig sein.
+
+  **Ort:** [place]
+  
+  **Datum:** [current_date]
+  
+  **Unterschrift:** ______________________
