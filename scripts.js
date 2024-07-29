@@ -54,7 +54,6 @@ function createQuestionnaire(groups, parentDiv = document.getElementById('questi
 
     if (level === 1) {
         generateFullText(); // Initial text generation
-        checkConditions(); // Initial check for conditions
     }
 }
 
@@ -62,8 +61,8 @@ function createQuestionnaire(groups, parentDiv = document.getElementById('questi
 function appendQuestion(parentDiv, question) {
     const div = document.createElement('div');
     div.classList.add('form-group', 'label-group');
+    div.id = `question-${question.id}`;
     div.setAttribute('data-question-id', question.id);
-    div.setAttribute('data-conditions', JSON.stringify(question.conditions || []));
     div.style.display = question.conditions && question.conditions.length > 0 ? 'none' : 'block'; // Show initially if no conditions
 
     div.innerHTML = `<label>${marked.parse(question.question)}</label>`;
@@ -78,7 +77,7 @@ function appendQuestion(parentDiv, question) {
             }
             div.innerHTML += `
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.text_block}" ${checked} ${option.default ? 'data-default="true"' : ''}>
+                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.id}" ${checked} ${option.default ? 'data-default="true"' : ''}>
                     <label class="form-check-label" for="${option.id}">${option.label}</label>
                 </div>
             `;
@@ -97,7 +96,7 @@ function appendQuestion(parentDiv, question) {
         question.options.forEach(option => {
             div.innerHTML += `
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="${question.id}" id="${option.id}" value="${option.text_block}" ${option.default ? 'checked' : ''}>
+                    <input class="form-check-input" type="checkbox" name="${question.id}" id="${option.id}" value="${option.id}" ${option.default ? 'checked' : ''}>
                     <label class="form-check-label" for="${option.id}">${option.label}</label>
                 </div>
             `;
@@ -161,27 +160,32 @@ function appendQuestion(parentDiv, question) {
 // Function to check conditions
 function checkConditions() {
     const form = document.getElementById('questionnaire');
-    const questions = form.querySelectorAll('[data-question-id]');
 
-    questions.forEach(questionDiv => {
-        const conditions = JSON.parse(questionDiv.getAttribute('data-conditions'));
-        if (conditions.length === 0) {
-            questionDiv.style.display = 'block';
-            return;
-        }
-
-        let showQuestion = conditions.every(condition => {
-            const conditionInput = form.querySelector(`[name="${condition.id}"]`);
-            if (!conditionInput) return false;
-
-            if (conditionInput.type === 'radio' || conditionInput.type === 'checkbox') {
-                return conditionInput.checked && condition.value === conditionInput.value;
-            } else {
-                return conditionInput.value === condition.value;
+    allGroups.forEach(group => {
+        group.questions.forEach(question => {
+            const questionDiv = document.getElementById(`question-${question.id}`);
+            const conditions = question.conditions || [];
+            if (conditions.length === 0) {
+                questionDiv.style.display = 'block';
+                return;
             }
-        });
 
-        questionDiv.style.display = showQuestion ? 'block' : 'none';
+            let showQuestion = true;
+            conditions.forEach(condition => {
+                const conditionInput = form.querySelector(`[name="${condition.id}"]`);
+                if (conditionInput.type === 'radio' || conditionInput.type === 'checkbox') {
+                    if (conditionInput.checked && condition.value === conditionInput.value) {
+                        showQuestion = true;
+                    } else {
+                        showQuestion = false;
+                    }
+                } else if (conditionInput.value !== condition.value) {
+                    showQuestion = false;
+                }
+            });
+
+            questionDiv.style.display = showQuestion ? 'block' : 'none';
+        });
     });
 }
 
@@ -243,10 +247,11 @@ function generateText(groups, form, level = 1) {
                 if (question.type === 'multiple_choice' || question.type === 'checkbox') {
                     if (values.length > 0) {
                         values.forEach(value => {
+                            const option = question.options.find(opt => opt.id === value.id);
                             if (question.pre_text) {
                                 groupText += question.pre_text;
                             }
-                            let textBlock = value.value;
+                            let textBlock = option.text_block;
                             // Replace tokens
                             textBlock = replaceTokens(textBlock, form);
                             groupText += textBlock;
@@ -299,15 +304,6 @@ function generateText(groups, form, level = 1) {
 // Initial call to check conditions after loading the form
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('questionnaire');
-    const questions = form.querySelectorAll('[data-question-id]');
-
-    questions.forEach(questionDiv => {
-        const conditions = JSON.parse(questionDiv.getAttribute('data-conditions'));
-        if (conditions.length === 0) {
-            questionDiv.style.display = 'block';
-        }
-    });
-
     checkConditions();
     generateFullText(); // Generate initial text with default values
 });
