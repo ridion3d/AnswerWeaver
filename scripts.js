@@ -61,6 +61,10 @@ function createQuestionnaire(groups, parentDiv = document.getElementById('questi
 function appendQuestion(parentDiv, question) {
     const div = document.createElement('div');
     div.classList.add('form-group', 'label-group');
+    div.setAttribute('data-question-id', question.id);
+    div.setAttribute('data-conditions', JSON.stringify(question.conditions || []));
+    div.style.display = 'none'; // Hide initially until conditions are checked
+
     div.innerHTML = `<label>${marked.parse(question.question)}</label>`;
 
     if (question.type === 'multiple_choice') {
@@ -95,7 +99,38 @@ function appendQuestion(parentDiv, question) {
     // Add event listeners to update the text on change
     const inputs = div.querySelectorAll('input');
     inputs.forEach(input => {
-        input.addEventListener('change', () => generateFullText());
+        input.addEventListener('change', () => {
+            checkConditions();
+            generateFullText();
+        });
+    });
+
+    // Check conditions initially
+    checkConditions();
+}
+
+// Check conditions to show or hide questions
+function checkConditions() {
+    const form = document.getElementById('questionnaire');
+    const questions = form.querySelectorAll('[data-question-id]');
+
+    questions.forEach(questionDiv => {
+        const conditions = JSON.parse(questionDiv.getAttribute('data-conditions'));
+        let showQuestion = true;
+
+        conditions.forEach(condition => {
+            const conditionQuestion = form.querySelector(`[name="${condition.id}"]`);
+            if (conditionQuestion) {
+                const conditionMet = [...form.querySelectorAll(`[name="${condition.id}"]:checked`)]
+                    .map(input => input.value)
+                    .includes(condition.value);
+                if (!conditionMet) {
+                    showQuestion = false;
+                }
+            }
+        });
+
+        questionDiv.style.display = showQuestion ? 'block' : 'none';
     });
 }
 
