@@ -45,12 +45,28 @@ groups:
             label: "Value 3"
             text_block: "Value 3 is important to me."
 
+  - group_name: "Personal Information"
+    show_group_name: true
+    questions:
+      - id: first_name
+        question: "What is your first name?"
+        type: text
+        multiline: false
+        text_block: "My first name is [USER_INPUT]."
+
+      - id: last_name
+        question: "What is your last name?"
+        type: text
+        multiline: false
+        text_block: "My last name is [USER_INPUT]."
+        
   - group_name: "Additional Comments"
     show_group_name: false
     questions:
       - id: q3
         question: "Please provide any additional comments or information:"
         type: text
+        multiline: true
         pre_text: "Feel free to add any additional comments below:"
         post_text: "Thank you for providing your comments."
         text_block: "Additional comments: [USER_INPUT]"
