@@ -124,16 +124,23 @@ function appendQuestion(parentDiv, question) {
         if (question.default_from) {
             const defaultFromInput = document.querySelector(`[name="${question.default_from}"]`);
             if (defaultFromInput) {
-                textInput.value = defaultFromInput.value;
-                defaultFromInput.addEventListener('input', () => {
-                    textInput.value = defaultFromInput.value;
+                const updateDefault = () => {
+                    if (textInput.dataset.userChanged !== 'true') {
+                        textInput.value = defaultFromInput.value;
+                    }
+                };
+                updateDefault();
+                defaultFromInput.addEventListener('input', updateDefault);
+                textInput.addEventListener('input', () => {
+                    textInput.dataset.userChanged = 'true';
                     generateFullText();
                 });
             }
+        } else {
+            textInput.addEventListener('input', () => generateFullText()); // Add input event listener
         }
 
         div.appendChild(textInput);
-        textInput.addEventListener('input', () => generateFullText()); // Add input event listener
     }
 
     parentDiv.appendChild(div);
