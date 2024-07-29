@@ -59,6 +59,7 @@ groups:
         multiline: false
         text_block: "Wohnort:\n**[USER_INPUT]**"
         placeholder: "Hamburg"
+        default_from: birth_place
         conditions:
           - id: same_as_birth_place
             value: same_no
@@ -130,7 +131,7 @@ outro_text: |
 
   Hiermit bestätige ich, [first_name] [last_name], dass ich diese Patientenverfügung im Vollbesitz meiner geistigen Kräfte und aus freiem Willen erstellt habe. Diese Verfügung soll ab dem heutigen Datum [current_date] gültig sein.
 
-  **Ort:** [residence_place] oder [birth_place]
+  **Ort:** [residence_place]
   
   **Datum:** [current_date]
   
