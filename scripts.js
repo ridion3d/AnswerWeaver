@@ -185,8 +185,8 @@ function checkConditions() {
     });
 }
 
-// Function to replace placeholders with actual values
-function replacePlaceholders(text, form) {
+// Function to replace tokens with actual values
+function replaceTokens(text, form) {
     return text.replace(/\[([^\]]+)\]/g, (_, key) => {
         const inputElement = form.querySelector(`[name="${key}"]`);
         if (!inputElement) return ''; // Kein Input-Feld gefunden, kein Wert zu ersetzen.
@@ -212,10 +212,10 @@ function replacePlaceholders(text, form) {
 function generateFullText() {
     const form = document.getElementById('questionnaire');
 
-    let text = introText ? `${replacePlaceholders(introText, form)}\n\n` : '';
+    let text = introText ? `${replaceTokens(introText, form)}\n\n` : '';
     text += generateText(allGroups, form);
     if (outroText) {
-        text += `\n\n${replacePlaceholders(outroText, form)}`;
+        text += `\n\n${replaceTokens(outroText, form)}`;
     }
 
     simplemde.value(text); // Set the generated text in the SimpleMDE editor
@@ -248,8 +248,8 @@ function generateText(groups, form, level = 1) {
                     }
                     if (question.text_block) {
                         let textBlock = question.text_block.replace('[USER_INPUT]', questionValue);
-                        // Replace placeholders
-                        textBlock = replacePlaceholders(textBlock, form);
+                        // Replace tokens
+                        textBlock = replaceTokens(textBlock, form);
                         groupText += textBlock;
                     }
                     if (question.post_text) {
