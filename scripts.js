@@ -86,7 +86,8 @@ function appendQuestion(parentDiv, question) {
             `;
         });
     } else if (question.type === 'text') {
-        if (question.multiline) {
+        const multiline = question.multiline || false; // Default value is false
+        if (multiline) {
             const textInput = document.createElement('textarea');
             textInput.name = question.id;
             textInput.rows = 4;
@@ -117,6 +118,7 @@ function appendQuestion(parentDiv, question) {
     // Check conditions initially
     checkConditions();
 }
+
 
 // Check conditions to show or hide questions
 function checkConditions() {
