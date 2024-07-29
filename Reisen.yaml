@@ -1,0 +1,78 @@
+friendly_name: "Reisepräferenz-Umfrage"
+title: "Umfrage zu Reisepräferenzen"
+introduction: |
+  **Umfrage zu Reisepräferenzen**
+
+  Diese Umfrage soll uns helfen, Ihre bevorzugten Reiseziele und -arten besser zu verstehen.
+
+intro_text: |
+  **Reisepräferenz-Umfrage**
+
+  Bitte füllen Sie diese Umfrage aus, um uns Ihre bevorzugten Reiseziele und -arten mitzuteilen. Ihre Antworten helfen uns, bessere Angebote für Sie zu erstellen.
+
+groups:
+  - group_name: "Persönliche Informationen"
+    show_group_name: true
+    questions:
+      - id: name
+        question: "Name:"
+        type: text
+        multiline: false
+        text_block: "**Name:** [USER_INPUT]"
+        placeholder: "Max Mustermann"
+
+      - id: age
+        question: "Alter:"
+        type: text
+        multiline: false
+        text_block: "**Alter:** [USER_INPUT]"
+        placeholder: "30"
+
+  - group_name: "Reisepräferenzen"
+    show_group_name: true
+    questions:
+      - id: bevorzugte_reiseart
+        question: "Welche Art von Reisen bevorzugen Sie?"
+        type: multiple_choice
+        options:
+          - id: strandurlaub
+            label: "Strandurlaub"
+            text_block: "Ich bevorzuge Strandurlaube."
+          - id: städtereise
+            label: "Städtereisen"
+            text_block: "Ich bevorzuge Städtereisen."
+          - id: abenteuerreise
+            label: "Abenteuerreisen"
+            text_block: "Ich bevorzuge Abenteuerreisen."
+        none_option: "Keine Präferenz"
+
+      - id: bevorzugtes_reiseziel
+        question: "Was ist Ihr bevorzugtes Reiseziel?"
+        type: text
+        multiline: false
+        text_block: "**Bevorzugtes Reiseziel:** [USER_INPUT]"
+        placeholder: "Hawaii"
+
+      - id: reisehaeufigkeit
+        question: "Wie oft reisen Sie pro Jahr?"
+        type: multiple_choice
+        options:
+          - id: einmal
+            label: "Einmal"
+            text_block: "Ich reise einmal pro Jahr."
+          - id: zweimal
+            label: "Zweimal"
+            text_block: "Ich reise zweimal pro Jahr."
+          - id: mehr_als_zweimal
+            label: "Mehr als zweimal"
+            text_block: "Ich reise mehr als zweimal pro Jahr."
+        none_option: "Keine Angabe"
+
+outro_text: |
+  **Vielen Dank**
+
+  Vielen Dank, dass Sie sich die Zeit genommen haben, unsere Reisepräferenz-Umfrage auszufüllen. Ihre Antworten helfen uns, unsere Angebote besser auf Ihre Wünsche abzustimmen.
+
+  **Datum:** [current_date]
+  
+  **Unterschrift:** ______________________
