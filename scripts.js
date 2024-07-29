@@ -23,6 +23,8 @@ fetch('questions.yaml')
         introText = data.intro_text || '';
         outroText = data.outro_text || '';
         createQuestionnaire(data.groups);
+        checkConditions(); // Check conditions after creating the questionnaire
+        generateFullText(); // Generate initial text with default values
     })
     .catch(error => console.error('Error fetching the YAML file:', error));
 
@@ -51,10 +53,6 @@ function createQuestionnaire(groups, parentDiv = document.getElementById('questi
 
         parentDiv.appendChild(groupDiv);
     });
-
-    if (level === 1) {
-        generateFullText(); // Initial text generation
-    }
 }
 
 // Helper function to append questions
@@ -152,9 +150,6 @@ function appendQuestion(parentDiv, question) {
             generateFullText();
         });
     });
-
-    // Check conditions initially
-    setTimeout(checkConditions, 0); // Ensure conditions are checked after initial render
 }
 
 // Function to check conditions
@@ -170,14 +165,9 @@ function checkConditions() {
                 return;
             }
 
-            let showQuestion = true;
-            conditions.forEach(condition => {
+            let showQuestion = conditions.every(condition => {
                 const conditionInput = form.querySelector(`[name="${condition.id}"]:checked, [name="${condition.id}"]`);
-                if (conditionInput && ((conditionInput.type === 'radio' || conditionInput.type === 'checkbox') ? conditionInput.value === condition.value : conditionInput.value.trim() === condition.value)) {
-                    showQuestion = true;
-                } else {
-                    showQuestion = false;
-                }
+                return conditionInput && ((conditionInput.type === 'radio' || conditionInput.type === 'checkbox') ? conditionInput.value === condition.value : conditionInput.value.trim() === condition.value);
             });
 
             questionDiv.style.display = showQuestion ? 'block' : 'none';
