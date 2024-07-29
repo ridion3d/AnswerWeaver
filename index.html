@@ -13,22 +13,12 @@
 <body>
     <div class="container mt-5">
         <div class="row mb-3">
-            <div class="col-md-6">
-                <input type="text" id="yaml-url" class="form-control" placeholder="URL to YAML file">
-            </div>
-            <div class="col-md-2">
-                <button id="load-yaml" class="btn btn-primary">Load YAML</button>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <input type="text" id="repo-url" class="form-control" placeholder="GitHub Repository URL">
-            </div>
-            <div class="col-md-2">
-                <button id="load-repo" class="btn btn-primary">Load Repo</button>
+            <div class="col-md-8">
+                <input type="text" id="url-input" class="form-control"
+                    placeholder="URL to YAML file or GitHub Repository">
             </div>
             <div class="col-md-4">
-                <select id="yaml-files" class="form-control" style="display: none;"></select>
+                <button id="load-url" class="btn btn-primary">Load</button>
             </div>
         </div>
         <div class="row">
