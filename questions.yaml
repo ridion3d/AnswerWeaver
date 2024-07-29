@@ -49,7 +49,6 @@ groups:
           - id: option2
             label: "Nein"
             text_block: "möchte ich keine lebensverlängernden Maßnahmen erhalten."
-        none_option: "Nichts von allem"
 
       - id: schmerzbehandlung
         question: "Soll eine Schmerzbehandlung durchgeführt werden, auch wenn dies den Todeseintritt beschleunigen könnte?"
