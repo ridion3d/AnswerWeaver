@@ -157,6 +157,34 @@ function appendQuestion(parentDiv, question) {
     setTimeout(checkConditions, 0); // Ensure conditions are checked after initial render
 }
 
+// Function to check conditions
+function checkConditions() {
+    const form = document.getElementById('questionnaire');
+    const questions = form.querySelectorAll('[data-question-id]');
+
+    questions.forEach(questionDiv => {
+        const conditions = JSON.parse(questionDiv.getAttribute('data-conditions'));
+        if (conditions.length === 0) {
+            questionDiv.style.display = 'block';
+            return;
+        }
+
+        let showQuestion = true;
+        conditions.forEach(condition => {
+            const conditionInput = form.querySelector(`[name="${condition.id}"]`);
+            if (conditionInput.type === 'radio' || conditionInput.type === 'checkbox') {
+                if (!conditionInput.checked && condition.value === conditionInput.value) {
+                    showQuestion = false;
+                }
+            } else if (conditionInput.value !== condition.value) {
+                showQuestion = false;
+            }
+        });
+
+        questionDiv.style.display = showQuestion ? 'block' : 'none';
+    });
+}
+
 // Function to replace placeholders with actual values
 function replacePlaceholders(text, form) {
     return text.replace(/\[([^\]]+)\]/g, (_, key) => {
