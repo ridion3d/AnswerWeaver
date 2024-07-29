@@ -3,7 +3,9 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     color: #343a40;
     margin-bottom: 20px;
 }
@@ -33,11 +35,12 @@ h3 {
     line-height: 1.5;
 }
 
-form, pre#result {
+form,
+pre#result {
     background: #ffffff;
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 pre#result {
@@ -50,7 +53,8 @@ h4 {
     color: #007bff;
 }
 
-.label-group, .form-check {
+.label-group,
+.form-check {
     padding-left: 20px;
 }
 
