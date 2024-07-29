@@ -7,7 +7,7 @@ introduction: |
 intro_text: |
   **Patientenverfügung**
 
-  Ich, [first_name] [last_name], geboren am [birth_date], erkläre hiermit meinen Willen bezüglich medizinischer Behandlungen für den Fall, dass ich nicht mehr in der Lage sein sollte, selbst Entscheidungen zu treffen.
+  Ich, [first_name] [last_name], geboren am [birth_date] in [birth_place], erkläre hiermit meinen Willen bezüglich medizinischer Behandlungen für den Fall, dass ich nicht mehr in der Lage sein sollte, selbst Entscheidungen zu treffen.
 
 groups:
   - group_name: "Persönliche Informationen"
@@ -33,6 +33,35 @@ groups:
         multiline: false
         text_block: "Geburtsdatum:\n**[USER_INPUT]**"
         placeholder: "01.01.1970"
+
+      - id: birth_place
+        question: "Geburtsort:"
+        type: text
+        multiline: false
+        text_block: "Geburtsort:\n**[USER_INPUT]**"
+        placeholder: "Berlin"
+
+      - id: same_as_birth_place
+        question: "Ist Ihr Wohnort derselbe wie Ihr Geburtsort?"
+        type: multiple_choice
+        options:
+          - id: same_yes
+            label: "Ja"
+            text_block: ""
+            default: true
+          - id: same_no
+            label: "Nein"
+            text_block: ""
+
+      - id: residence_place
+        question: "Wohnort:"
+        type: text
+        multiline: false
+        text_block: "Wohnort:\n**[USER_INPUT]**"
+        placeholder: "Hamburg"
+        conditions:
+          - id: same_as_birth_place
+            value: same_no
 
   - group_name: "Behandlungswünsche"
     show_group_name: true
@@ -101,7 +130,7 @@ outro_text: |
 
   Hiermit bestätige ich, [first_name] [last_name], dass ich diese Patientenverfügung im Vollbesitz meiner geistigen Kräfte und aus freiem Willen erstellt habe. Diese Verfügung soll ab dem heutigen Datum [current_date] gültig sein.
 
-  **Ort:** [place]
+  **Ort:** [residence_place] oder [birth_place]
   
   **Datum:** [current_date]
   
