@@ -71,7 +71,7 @@ function appendQuestion(parentDiv, question) {
         question.options.forEach(option => {
             div.innerHTML += `
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.id}">
+                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.id}" ${option.default ? 'checked' : ''}>
                     <label class="form-check-label" for="${option.id}">${option.label}</label>
                 </div>
             `;
@@ -80,7 +80,7 @@ function appendQuestion(parentDiv, question) {
         question.options.forEach(option => {
             div.innerHTML += `
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="${question.id}" id="${option.id}" value="${option.id}">
+                    <input class="form-check-input" type="checkbox" name="${question.id}" id="${option.id}" value="${option.id}" ${option.default ? 'checked' : ''}>
                     <label class="form-check-label" for="${option.id}">${option.label}</label>
                 </div>
             `;
@@ -92,6 +92,9 @@ function appendQuestion(parentDiv, question) {
             textInput.name = question.id;
             textInput.rows = 4;
             textInput.cols = 50;
+            if (question.placeholder) {
+                textInput.placeholder = question.placeholder;
+            }
             div.appendChild(textInput);
             textInput.addEventListener('input', () => generateFullText()); // Add input event listener
         } else {
@@ -99,6 +102,9 @@ function appendQuestion(parentDiv, question) {
             textInput.type = 'text';
             textInput.name = question.id;
             textInput.classList.add('form-control');
+            if (question.placeholder) {
+                textInput.placeholder = question.placeholder;
+            }
             div.appendChild(textInput);
             textInput.addEventListener('input', () => generateFullText()); // Add input event listener
         }
