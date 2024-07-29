@@ -8,25 +8,66 @@ let allGroups = [];
 let introText = '';
 let outroText = '';
 
-// Load YAML file
-fetch('questions.yaml')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.text();
-    })
-    .then(yamlText => {
-        const data = jsyaml.load(yamlText);
-        displayIntroduction(data);
-        allGroups = data.groups;
-        introText = data.intro_text || '';
-        outroText = data.outro_text || '';
-        createQuestionnaire(data.groups);
-        checkConditions(); // Check conditions after creating the questionnaire
-        generateFullText(); // Generate initial text with default values
-    })
-    .catch(error => console.error('Error fetching the YAML file:', error));
+// Load YAML from URL
+document.getElementById('load-yaml').addEventListener('click', () => {
+    const url = document.getElementById('yaml-url').value;
+    if (url) {
+        fetchYAML(url);
+    }
+});
+
+// Load YAML files from GitHub repo
+document.getElementById('load-repo').addEventListener('click', () => {
+    const repoUrl = document.getElementById('repo-url').value;
+    if (repoUrl) {
+        fetchRepoFiles(repoUrl);
+    }
+});
+
+// Fetch YAML file from URL
+function fetchYAML(url) {
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.text();
+        })
+        .then(yamlText => {
+            const data = jsyaml.load(yamlText);
+            displayIntroduction(data);
+            allGroups = data.groups;
+            introText = data.intro_text || '';
+            outroText = data.outro_text || '';
+            createQuestionnaire(data.groups);
+            checkConditions(); // Check conditions after creating the questionnaire
+            generateFullText(); // Generate initial text with default values
+        })
+        .catch(error => console.error('Error fetching the YAML file:', error));
+}
+
+// Fetch YAML files from GitHub repo
+function fetchRepoFiles(repoUrl) {
+    const apiUrl = repoUrl.replace('github.com', 'api.github.com/repos') + '/contents';
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(files => {
+            const yamlFiles = files.filter(file => file.name.endsWith('.yaml') || file.name.endsWith('.yml'));
+            const select = document.getElementById('yaml-files');
+            select.innerHTML = '';
+            yamlFiles.forEach(file => {
+                const option = document.createElement('option');
+                option.value = file.download_url;
+                option.textContent = file.name;
+                select.appendChild(option);
+            });
+            select.style.display = 'block';
+            select.addEventListener('change', () => {
+                fetchYAML(select.value);
+            });
+        })
+        .catch(error => console.error('Error fetching the repository files:', error));
+}
 
 // Display title and introduction
 function displayIntroduction(data) {
