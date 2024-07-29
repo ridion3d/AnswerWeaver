@@ -4,7 +4,7 @@ introduction: |
   Please answer the following questions carefully to document your values and preferences.
 
 intro_text: |
-  **Personal Values and Preferences of [Name]**
+  **Personal Values and Preferences of [first_name] [last_name]**
   
   This document serves to record my personal values and preferences in the event that I am no longer able to make decisions independently. Please read the following instructions carefully and respect my wishes to ensure that my will is honored.
 
@@ -77,7 +77,7 @@ groups:
 outro_text: |
   **Confirmation of Values and Preferences**
   
-  I, [Name], declare that I have created this document in full possession of my mental faculties and without external pressure. I ask that my wishes and instructions recorded in this document be respected and implemented in the event of decision-making.
+  I, [first_name] [last_name], declare that I have created this document in full possession of my mental faculties and without external pressure. I ask that my wishes and instructions recorded in this document be respected and implemented in the event of decision-making.
 
   **Location:** [Location]
   
