@@ -42,7 +42,11 @@ function fetchRepoFiles(repoUrl) {
             yamlFiles.forEach((file, index) => {
                 const option = document.createElement('option');
                 option.value = file.download_url;
-                option.textContent = file.name; // Temporärer Text, bis die Datei geladen wird
+
+                // Replace underscores with spaces and remove file extension
+                const fileName = file.name.replace(/_/g, ' ').replace(/\.[^/.]+$/, '');
+                option.textContent = fileName;
+
                 select.appendChild(option);
 
                 // Automatically load the first YAML file
