@@ -63,7 +63,7 @@ function appendQuestion(parentDiv, question) {
     div.classList.add('form-group', 'label-group');
     div.setAttribute('data-question-id', question.id);
     div.setAttribute('data-conditions', JSON.stringify(question.conditions || []));
-    div.style.display = 'none'; // Hide initially until conditions are checked
+    div.style.display = question.conditions && question.conditions.length > 0 ? 'none' : 'block'; // Show initially if no conditions
 
     div.innerHTML = `<label>${marked.parse(question.question)}</label>`;
 
@@ -141,7 +141,6 @@ function appendQuestion(parentDiv, question) {
     checkConditions();
 }
 
-
 // Check conditions to show or hide questions
 function checkConditions() {
     const form = document.getElementById('questionnaire');
@@ -151,21 +150,27 @@ function checkConditions() {
         const conditions = JSON.parse(questionDiv.getAttribute('data-conditions'));
         let showQuestion = true;
 
-        conditions.forEach(condition => {
-            const conditionQuestion = form.querySelector(`[name="${condition.id}"]`);
-            if (conditionQuestion) {
-                const conditionMet = [...form.querySelectorAll(`[name="${condition.id}"]:checked`)]
-                    .map(input => input.value)
-                    .includes(condition.value);
-                if (!conditionMet) {
-                    showQuestion = false;
+        if (conditions.length > 0) {
+            conditions.forEach(condition => {
+                const conditionQuestion = form.querySelector(`[name="${condition.id}"]`);
+                if (conditionQuestion) {
+                    const conditionMet = [...form.querySelectorAll(`[name="${condition.id}"]:checked`)]
+                        .map(input => input.value)
+                        .includes(condition.value);
+                    if (!conditionMet) {
+                        showQuestion = false;
+                    }
                 }
-            }
-        });
+            });
+        }
 
         questionDiv.style.display = showQuestion ? 'block' : 'none';
     });
 }
+
+// Initial call to check conditions after loading the form
+document.addEventListener('DOMContentLoaded', checkConditions);
+
 
 // Generate full text including intro and outro
 function generateFullText() {
