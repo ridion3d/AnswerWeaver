@@ -21,11 +21,9 @@ groups:
           - id: option1
             label: "Option 1"
             text_block: "I prefer option 1."
-
           - id: option2
             label: "Option 2"
             text_block: "I prefer option 2."
-
           - id: option3
             label: "Option 3"
             text_block: "I prefer option 3."
@@ -40,11 +38,9 @@ groups:
           - id: value1
             label: "Value 1"
             text_block: "Value 1 is important to me."
-
           - id: value2
             label: "Value 2"
             text_block: "Value 2 is important to me."
-
           - id: value3
             label: "Value 3"
             text_block: "Value 3 is important to me."
@@ -58,6 +54,9 @@ groups:
         pre_text: "Feel free to add any additional comments below:"
         post_text: "Thank you for providing your comments."
         text_block: "Additional comments: [USER_INPUT]"
+        conditions:
+          - id: q2
+            value: value1
         
 outro_text: |
   **Confirmation of Values and Preferences**
