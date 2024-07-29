@@ -211,30 +211,11 @@ function checkConditions() {
 // Generate full text including intro and outro
 function generateFullText() {
     const form = document.getElementById('questionnaire');
-    const formData = new FormData(form);
 
-    let answers = {};
-    formData.forEach((value, key) => {
-        answers[key] = value;
-    });
-
-    // Update answers with default_from values if not user changed
-    document.querySelectorAll('[data-question-id]').forEach(questionDiv => {
-        const questionId = questionDiv.getAttribute('data-question-id');
-        const input = form.querySelector(`[name="${questionId}"]`);
-        const defaultFrom = input.getAttribute('data-default-from');
-        if (defaultFrom && input.dataset.userChanged !== 'true') {
-            const defaultFromInput = form.querySelector(`[name="${defaultFrom}"]`);
-            if (defaultFromInput) {
-                answers[questionId] = defaultFromInput.value || input.placeholder || '';
-            }
-        }
-    });
-
-    let text = introText ? `${replacePlaceholders(introText, answers)}\n\n` : '';
-    text += generateText(allGroups, answers);
+    let text = introText ? `${replacePlaceholders(introText, form)}\n\n` : '';
+    text += generateText(allGroups, form);
     if (outroText) {
-        text += `\n\n${replacePlaceholders(outroText, answers)}`;
+        text += `\n\n${replacePlaceholders(outroText, form)}`;
     }
 
     simplemde.value(text); // Set the generated text in the SimpleMDE editor
@@ -249,11 +230,28 @@ function generateFullText() {
 }
 
 // Function to replace placeholders with actual values
-function replacePlaceholders(text, answers) {
+function replacePlaceholders(text, form) {
     return text.replace(/\[([^\]]+)\]/g, (_, key) => {
-        return answers[key] || '';
+        const inputElement = form.querySelector(`[name="${key}"]`);
+        if (!inputElement) return ''; // Kein Input-Feld gefunden, kein Wert zu ersetzen.
+
+        // Überprüfen, ob der Benutzer einen Wert eingegeben hat
+        let value = inputElement.value.trim();
+        if (value) return value; // Direkter Wert des Input-Elements, falls vorhanden
+
+        // Verwenden des Werts aus default_from, falls vorhanden und kein Benutzerwert gesetzt ist
+        const defaultFrom = inputElement.getAttribute('data-default-from');
+        if (defaultFrom) {
+            const defaultFromElement = form.querySelector(`[name="${defaultFrom}"]`);
+            value = defaultFromElement ? defaultFromElement.value.trim() : '';
+            if (value) return value;
+        }
+
+        // Verwenden des Platzhalters, wenn kein anderer Wert gefunden wurde
+        return inputElement.placeholder || '';
     });
 }
+
 
 
 
@@ -302,8 +300,7 @@ function collectAnswers(groups, level = 1) {
 
 
 // Generate text based on answers
-function generateText(groups, answers, level = 1) {
-    const form = document.getElementById('questionnaire');
+function generateText(groups, form, level = 1) {
     let text = '';
 
     groups.forEach(group => {
@@ -312,49 +309,28 @@ function generateText(groups, answers, level = 1) {
 
         if (group.questions) {
             group.questions.forEach(question => {
-                const values = form.querySelectorAll(`[name="${question.id}"]:checked`);
-                if (question.type === 'multiple_choice' || question.type === 'checkbox') {
-                    if (values.length > 0) {
-                        values.forEach(value => {
-                            const selectedOption = question.options.find(option => option.id === value.value);
-                            if (selectedOption) {
-                                if (question.pre_text) {
-                                    groupText += question.pre_text;
-                                }
-                                let textBlock = selectedOption.text_block;
-                                // Replace placeholders
-                                textBlock = replacePlaceholders(textBlock, answers);
-                                groupText += textBlock;
-                                if (question.post_text) {
-                                    groupText += question.post_text;
-                                }
-                                groupText += '\n\n';
-                                hasContent = true;
-                            }
-                        });
+                const questionElement = form.querySelector(`[name="${question.id}"]`);
+                let questionValue = questionElement ? questionElement.value.trim() : '';
+
+                if (questionValue) {
+                    if (question.pre_text) {
+                        groupText += question.pre_text;
                     }
-                } else if (question.type === 'text') {
-                    const textInput = form.querySelector(`textarea[name="${question.id}"], input[name="${question.id}"]`);
-                    if (textInput && textInput.value.trim() !== '') {
-                        if (question.pre_text) {
-                            groupText += question.pre_text;
-                        }
-                        let textBlock = question.text_block.replace('[USER_INPUT]', textInput.value.trim());
-                        // Replace placeholders
-                        textBlock = replacePlaceholders(textBlock, answers);
-                        groupText += textBlock;
-                        if (question.post_text) {
-                            groupText += question.post_text;
-                        }
-                        groupText += '\n\n';
-                        hasContent = true;
+                    let textBlock = question.text_block.replace('[USER_INPUT]', questionValue);
+                    // Replace placeholders
+                    textBlock = replacePlaceholders(textBlock, form);
+                    groupText += textBlock;
+                    if (question.post_text) {
+                        groupText += question.post_text;
                     }
+                    groupText += '\n\n';
+                    hasContent = true;
                 }
             });
         }
 
         if (group.groups) {
-            const subGroupText = generateText(group.groups, answers, level + 1);
+            const subGroupText = generateText(group.groups, form, level + 1);
             if (subGroupText.trim() !== '') {
                 groupText += subGroupText;
                 hasContent = true;
