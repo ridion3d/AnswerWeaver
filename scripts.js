@@ -170,22 +170,6 @@ function appendQuestion(parentDiv, question) {
     setTimeout(checkConditions, 0); // Ensure conditions are checked after initial render
 }
 
-// Initial call to check conditions after loading the form
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('questionnaire');
-    const questions = form.querySelectorAll('[data-question-id]');
-
-    questions.forEach(questionDiv => {
-        const conditions = JSON.parse(questionDiv.getAttribute('data-conditions'));
-        if (conditions.length === 0) {
-            questionDiv.style.display = 'block';
-        }
-    });
-
-    checkConditions();
-    generateFullText(); // Generate initial text with default values
-});
-
 
 // Check conditions to show or hide questions
 function checkConditions() {
@@ -226,12 +210,31 @@ function checkConditions() {
 
 // Generate full text including intro and outro
 function generateFullText() {
-    const { answers, placeholders } = collectAnswers(allGroups);
+    const form = document.getElementById('questionnaire');
+    const formData = new FormData(form);
 
-    let text = introText ? replacePlaceholders(introText, answers, placeholders) + '\n\n' : '';
-    text += generateText(allGroups, answers, placeholders);
+    let answers = {};
+    formData.forEach((value, key) => {
+        answers[key] = value;
+    });
+
+    // Update answers with default_from values if not user changed
+    document.querySelectorAll('[data-question-id]').forEach(questionDiv => {
+        const questionId = questionDiv.getAttribute('data-question-id');
+        const input = form.querySelector(`[name="${questionId}"]`);
+        const defaultFrom = input.getAttribute('data-default-from');
+        if (defaultFrom && input.dataset.userChanged !== 'true') {
+            const defaultFromInput = form.querySelector(`[name="${defaultFrom}"]`);
+            if (defaultFromInput) {
+                answers[questionId] = defaultFromInput.value || input.placeholder || '';
+            }
+        }
+    });
+
+    let text = introText ? `${replacePlaceholders(introText, answers)}\n\n` : '';
+    text += generateText(allGroups, answers);
     if (outroText) {
-        text += '\n\n' + replacePlaceholders(outroText, answers, placeholders);
+        text += `\n\n${replacePlaceholders(outroText, answers)}`;
     }
 
     simplemde.value(text); // Set the generated text in the SimpleMDE editor
@@ -245,27 +248,11 @@ function generateFullText() {
     }
 }
 
-// Replace placeholders with answers or placeholders
-function replacePlaceholders(text, answers, placeholders = {}) {
-    const predefinedPlaceholders = {
-        current_date: new Date().toLocaleDateString(),
-        current_time: new Date().toLocaleTimeString(),
-        current_datetime: new Date().toLocaleString(),
-        // Add more predefined placeholders as needed
-    };
-
-    Object.keys(answers).forEach(key => {
-        text = text.replace(new RegExp(`\\[${key}\\]`, 'g'), answers[key]);
+// Function to replace placeholders with actual values
+function replacePlaceholders(text, answers) {
+    return text.replace(/\[([^\]]+)\]/g, (_, key) => {
+        return answers[key] || '';
     });
-    Object.keys(placeholders).forEach(key => {
-        if (!answers[key]) {
-            text = text.replace(new RegExp(`\\[${key}\\]`, 'g'), placeholders[key]);
-        }
-    });
-    Object.keys(predefinedPlaceholders).forEach(key => {
-        text = text.replace(new RegExp(`\\[${key}\\]`, 'g'), predefinedPlaceholders[key]);
-    });
-    return text;
 }
 
 
@@ -315,7 +302,7 @@ function collectAnswers(groups, level = 1) {
 
 
 // Generate text based on answers
-function generateText(groups, answers, placeholders, level = 1) {
+function generateText(groups, answers, level = 1) {
     const form = document.getElementById('questionnaire');
     let text = '';
 
@@ -336,7 +323,7 @@ function generateText(groups, answers, placeholders, level = 1) {
                                 }
                                 let textBlock = selectedOption.text_block;
                                 // Replace placeholders
-                                textBlock = replacePlaceholders(textBlock, answers, placeholders);
+                                textBlock = replacePlaceholders(textBlock, answers);
                                 groupText += textBlock;
                                 if (question.post_text) {
                                     groupText += question.post_text;
@@ -354,7 +341,7 @@ function generateText(groups, answers, placeholders, level = 1) {
                         }
                         let textBlock = question.text_block.replace('[USER_INPUT]', textInput.value.trim());
                         // Replace placeholders
-                        textBlock = replacePlaceholders(textBlock, answers, placeholders);
+                        textBlock = replacePlaceholders(textBlock, answers);
                         groupText += textBlock;
                         if (question.post_text) {
                             groupText += question.post_text;
@@ -367,7 +354,7 @@ function generateText(groups, answers, placeholders, level = 1) {
         }
 
         if (group.groups) {
-            const subGroupText = generateText(group.groups, answers, placeholders, level + 1);
+            const subGroupText = generateText(group.groups, answers, level + 1);
             if (subGroupText.trim() !== '') {
                 groupText += subGroupText;
                 hasContent = true;
@@ -384,3 +371,19 @@ function generateText(groups, answers, placeholders, level = 1) {
 
     return text;
 }
+
+// Initial call to check conditions after loading the form
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('questionnaire');
+    const questions = form.querySelectorAll('[data-question-id]');
+
+    questions.forEach(questionDiv => {
+        const conditions = JSON.parse(questionDiv.getAttribute('data-conditions'));
+        if (conditions.length === 0) {
+            questionDiv.style.display = 'block';
+        }
+    });
+
+    checkConditions();
+    generateFullText(); // Generate initial text with default values
+});
