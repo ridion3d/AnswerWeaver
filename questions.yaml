@@ -10,6 +10,10 @@ intro_text: |
 
   Ich, [first_name] [last_name], geboren am [birth_date] in [birth_place], erkläre hiermit meinen Willen bezüglich medizinischer Behandlungen für den Fall, dass ich nicht mehr in der Lage sein sollte, selbst Entscheidungen zu treffen.
 
+section_titles:
+  questionnaire: "Fragebogen"
+  generated_text: "Generierter Text"
+
 groups:
   - group_name: "Persönliche Informationen"
     show_group_name: true
