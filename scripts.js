@@ -184,34 +184,46 @@ function checkConditions() {
 }
 
 
-// Function to replace tokens with actual values
-function replaceTokens(text, form) {
-    return text.replace(/\[([^\]]+)\]/g, (_, key) => {
-        const inputElement = form.querySelector(`[name="${key}"]`);
-        if (!inputElement) return ''; // Kein Input-Feld gefunden, kein Wert zu ersetzen.
+// Function to find the value from the allGroups structure
+function findValue(key, groups) {
+    for (const group of groups) {
+        for (const question of group.questions) {
+            if (question.id === key) {
+                let value = '';
+                const inputElement = document.querySelector(`[name="${key}"]`);
 
-        // Überprüfen, ob der Benutzer einen Wert eingegeben hat
-        let value = inputElement.value.trim();
-        if (value) return value; // Direkter Wert des Input-Elements, falls vorhanden
+                // Check user input value
+                if (inputElement && inputElement.value.trim()) {
+                    return inputElement.value.trim();
+                }
 
-        // Verwenden des Werts aus default_from, falls vorhanden und kein Benutzerwert gesetzt ist
-        const defaultFrom = inputElement.getAttribute('data-default-from');
-        if (defaultFrom) {
-            const defaultFromElement = form.querySelector(`[name="${defaultFrom}"]`);
-            if (defaultFromElement) {
-                // Überprüfen, ob der Benutzer einen Wert im defaultFrom-Element eingegeben hat
-                value = defaultFromElement.value.trim();
-                if (value) return value;
+                // Check default_from value
+                if (question.default_from) {
+                    value = findValue(question.default_from, groups);
+                    if (value) return value;
+                }
 
-                // Verwenden des Platzhalters des defaultFrom-Elements, wenn kein anderer Wert gefunden wurde
-                return defaultFromElement.placeholder || '';
+                // Return placeholder
+                return question.placeholder || '';
             }
         }
 
-        // Verwenden des Platzhalters, wenn kein anderer Wert gefunden wurde
-        return inputElement.placeholder || '';
+        // Recursively search in subgroups
+        if (group.groups) {
+            const value = findValue(key, group.groups);
+            if (value) return value;
+        }
+    }
+    return '';
+}
+
+// Function to replace tokens with actual values
+function replaceTokens(text, form) {
+    return text.replace(/\[([^\]]+)\]/g, (_, key) => {
+        return findValue(key, allGroups) || '';
     });
 }
+
 
 
 // Generate full text including intro and outro
