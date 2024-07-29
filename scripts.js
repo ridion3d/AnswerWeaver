@@ -148,39 +148,6 @@ function appendQuestion(parentDiv, question) {
     });
 }
 
-
-// Function to check conditions
-function checkConditions() {
-    const form = document.getElementById('questionnaire');
-
-    allGroups.forEach(group => {
-        group.questions.forEach(question => {
-            const questionDiv = document.getElementById(`question-${question.id}`);
-            const conditions = question.conditions || [];
-            if (conditions.length === 0) {
-                questionDiv.style.display = 'block';
-                return;
-            }
-
-            let showQuestion = conditions.every(condition => {
-                const conditionInput = form.querySelector(`[name="${condition.id}"]`);
-                if (conditionInput) {
-                    if (conditionInput.type === 'radio' || conditionInput.type === 'checkbox') {
-                        const checkedInput = form.querySelector(`[name="${condition.id}"]:checked`);
-                        return checkedInput && checkedInput.value === condition.value;
-                    } else {
-                        return conditionInput.value.trim() === condition.value;
-                    }
-                }
-                return false;
-            });
-
-            questionDiv.style.display = showQuestion ? 'block' : 'none';
-        });
-    });
-}
-
-
 // Function to find the value from the allGroups structure
 function findValue(key, groups) {
     for (const group of groups) {
@@ -221,7 +188,36 @@ function replaceTokens(text, form) {
     });
 }
 
+// Function to check conditions
+function checkConditions() {
+    const form = document.getElementById('questionnaire');
 
+    allGroups.forEach(group => {
+        group.questions.forEach(question => {
+            const questionDiv = document.getElementById(`question-${question.id}`);
+            const conditions = question.conditions || [];
+            if (conditions.length === 0) {
+                questionDiv.style.display = 'block';
+                return;
+            }
+
+            let showQuestion = conditions.every(condition => {
+                const conditionInput = form.querySelector(`[name="${condition.id}"]`);
+                if (conditionInput) {
+                    if (conditionInput.type === 'radio' || conditionInput.type === 'checkbox') {
+                        const checkedInput = form.querySelector(`[name="${condition.id}"]:checked`);
+                        return checkedInput && checkedInput.value === condition.value;
+                    } else {
+                        return conditionInput.value.trim() === condition.value;
+                    }
+                }
+                return false;
+            });
+
+            questionDiv.style.display = showQuestion ? 'block' : 'none';
+        });
+    });
+}
 
 // Generate full text including intro and outro
 function generateFullText() {
