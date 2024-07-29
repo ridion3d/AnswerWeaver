@@ -172,14 +172,10 @@ function checkConditions() {
 
             let showQuestion = true;
             conditions.forEach(condition => {
-                const conditionInput = form.querySelector(`[name="${condition.id}"]`);
-                if (conditionInput.type === 'radio' || conditionInput.type === 'checkbox') {
-                    if (conditionInput.checked && condition.value === conditionInput.value) {
-                        showQuestion = true;
-                    } else {
-                        showQuestion = false;
-                    }
-                } else if (conditionInput.value !== condition.value) {
+                const conditionInput = form.querySelector(`[name="${condition.id}"]:checked, [name="${condition.id}"]`);
+                if (conditionInput && ((conditionInput.type === 'radio' || conditionInput.type === 'checkbox') ? conditionInput.value === condition.value : conditionInput.value.trim() === condition.value)) {
+                    showQuestion = true;
+                } else {
                     showQuestion = false;
                 }
             });
