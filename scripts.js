@@ -291,9 +291,7 @@ function generateText(groups, answers, placeholders, level = 1) {
 
     groups.forEach(group => {
         let groupText = '';
-        if (group.show_group_name !== false) {
-            groupText += `${'#'.repeat(level + 2)} ${group.group_name}\n\n`;
-        }
+        let hasContent = false;
 
         if (group.questions) {
             group.questions.forEach(question => {
@@ -314,6 +312,7 @@ function generateText(groups, answers, placeholders, level = 1) {
                                     groupText += question.post_text;
                                 }
                                 groupText += '\n\n';
+                                hasContent = true;
                             }
                         });
                     }
@@ -331,6 +330,7 @@ function generateText(groups, answers, placeholders, level = 1) {
                             groupText += question.post_text;
                         }
                         groupText += '\n\n';
+                        hasContent = true;
                     }
                 }
             });
@@ -338,16 +338,19 @@ function generateText(groups, answers, placeholders, level = 1) {
 
         if (group.groups) {
             const subGroupText = generateText(group.groups, answers, placeholders, level + 1);
-            if (subGroupText) {
+            if (subGroupText.trim() !== '') {
                 groupText += subGroupText;
+                hasContent = true;
             }
         }
 
-        if (groupText.trim() !== '') {
+        if (hasContent) {
+            if (group.show_group_name !== false) {
+                text += `${'#'.repeat(level + 2)} ${group.group_name}\n\n`;
+            }
             text += groupText;
         }
     });
 
     return text;
 }
-
