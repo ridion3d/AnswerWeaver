@@ -173,6 +173,13 @@ function generateFullText() {
 
 // Replace placeholders with answers or placeholders
 function replacePlaceholders(text, answers, placeholders = {}) {
+    const predefinedPlaceholders = {
+        current_date: new Date().toLocaleDateString(),
+        current_time: new Date().toLocaleTimeString(),
+        current_datetime: new Date().toLocaleString(),
+        // Add more predefined placeholders as needed
+    };
+
     Object.keys(answers).forEach(key => {
         text = text.replace(new RegExp(`\\[${key}\\]`, 'g'), answers[key]);
     });
@@ -181,8 +188,12 @@ function replacePlaceholders(text, answers, placeholders = {}) {
             text = text.replace(new RegExp(`\\[${key}\\]`, 'g'), placeholders[key]);
         }
     });
+    Object.keys(predefinedPlaceholders).forEach(key => {
+        text = text.replace(new RegExp(`\\[${key}\\]`, 'g'), predefinedPlaceholders[key]);
+    });
     return text;
 }
+
 
 
 
