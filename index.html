@@ -12,13 +12,16 @@
 
 <body>
     <div class="container mt-5">
-        <div class="row mb-3">
-            <div class="col-md-8">
+        <div class="row mb-3 align-items-end">
+            <div class="col-md-6">
                 <input type="text" id="url-input" class="form-control"
                     placeholder="URL to YAML file or GitHub Repository">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <button id="load-url" class="btn btn-primary">Load</button>
+            </div>
+            <div class="col-md-4" id="dropdown-container" style="display: none;">
+                <select id="yaml-files" class="form-control"></select>
             </div>
         </div>
         <div class="row">
