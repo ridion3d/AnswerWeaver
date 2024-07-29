@@ -76,6 +76,14 @@ function appendQuestion(parentDiv, question) {
                 </div>
             `;
         });
+        if (question.none_option) {
+            div.innerHTML += `
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="${question.id}" id="${question.id}_none" value="">
+                    <label class="form-check-label" for="${question.id}_none">${question.none_option}</label>
+                </div>
+            `;
+        }
     } else if (question.type === 'checkbox') {
         question.options.forEach(option => {
             div.innerHTML += `
@@ -124,6 +132,7 @@ function appendQuestion(parentDiv, question) {
     // Check conditions initially
     checkConditions();
 }
+
 
 // Check conditions to show or hide questions
 function checkConditions() {
