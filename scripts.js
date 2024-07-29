@@ -63,7 +63,7 @@ function appendQuestion(parentDiv, question) {
     div.classList.add('form-group', 'label-group');
     div.setAttribute('data-question-id', question.id);
     div.setAttribute('data-conditions', JSON.stringify(question.conditions || []));
-    div.style.display = 'none'; // Initially hide until conditions are checked
+    div.style.display = question.conditions && question.conditions.length > 0 ? 'none' : 'block'; // Show initially if no conditions
 
     div.innerHTML = `<label>${marked.parse(question.question)}</label>`;
 
@@ -103,27 +103,37 @@ function appendQuestion(parentDiv, question) {
         });
     } else if (question.type === 'text') {
         const multiline = question.multiline || false; // Default value is false
+        let textInput;
+
         if (multiline) {
-            const textInput = document.createElement('textarea');
+            textInput = document.createElement('textarea');
             textInput.name = question.id;
             textInput.rows = 4;
             textInput.cols = 50;
-            if (question.placeholder) {
-                textInput.placeholder = question.placeholder;
-            }
-            div.appendChild(textInput);
-            textInput.addEventListener('input', () => generateFullText()); // Add input event listener
         } else {
-            const textInput = document.createElement('input');
+            textInput = document.createElement('input');
             textInput.type = 'text';
             textInput.name = question.id;
             textInput.classList.add('form-control');
-            if (question.placeholder) {
-                textInput.placeholder = question.placeholder;
-            }
-            div.appendChild(textInput);
-            textInput.addEventListener('input', () => generateFullText()); // Add input event listener
         }
+
+        if (question.placeholder) {
+            textInput.placeholder = question.placeholder;
+        }
+
+        if (question.default_from) {
+            const defaultFromInput = document.querySelector(`[name="${question.default_from}"]`);
+            if (defaultFromInput) {
+                textInput.value = defaultFromInput.value;
+                defaultFromInput.addEventListener('input', () => {
+                    textInput.value = defaultFromInput.value;
+                    generateFullText();
+                });
+            }
+        }
+
+        div.appendChild(textInput);
+        textInput.addEventListener('input', () => generateFullText()); // Add input event listener
     }
 
     parentDiv.appendChild(div);
@@ -156,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkConditions();
     generateFullText(); // Generate initial text with default values
 });
+
 
 // Check conditions to show or hide questions
 function checkConditions() {
