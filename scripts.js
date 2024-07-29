@@ -152,12 +152,12 @@ function checkConditions() {
 
 // Generate full text including intro and outro
 function generateFullText() {
-    const answers = collectAnswers(allGroups);
+    const { answers, placeholders } = collectAnswers(allGroups);
 
-    let text = introText ? replacePlaceholders(introText, answers) + '\n\n' : '';
-    text += generateText(allGroups, answers);
+    let text = introText ? replacePlaceholders(introText, answers, placeholders) + '\n\n' : '';
+    text += generateText(allGroups, answers, placeholders);
     if (outroText) {
-        text += '\n\n' + replacePlaceholders(outroText, answers);
+        text += '\n\n' + replacePlaceholders(outroText, answers, placeholders);
     }
 
     simplemde.value(text); // Set the generated text in the SimpleMDE editor
@@ -171,18 +171,26 @@ function generateFullText() {
     }
 }
 
-// Replace placeholders with answers
-function replacePlaceholders(text, answers) {
+
+// Replace placeholders with answers or placeholders
+function replacePlaceholders(text, answers, placeholders) {
     Object.keys(answers).forEach(key => {
         text = text.replace(new RegExp(`\\[${key}\\]`, 'g'), answers[key]);
     });
+    Object.keys(placeholders).forEach(key => {
+        if (!answers[key]) {
+            text = text.replace(new RegExp(`\\[${key}\\]`, 'g'), placeholders[key]);
+        }
+    });
     return text;
 }
+
 
 // Collect all answers first
 function collectAnswers(groups, level = 1) {
     const form = document.getElementById('questionnaire');
     const answers = {};
+    const placeholders = {};
 
     groups.forEach(group => {
         if (group.questions) {
@@ -192,10 +200,19 @@ function collectAnswers(groups, level = 1) {
                     if (values.length > 0) {
                         answers[question.id] = values.join(', ');
                     }
+                    // Store placeholder value if no answer is given
+                    const options = question.options.filter(option => option.default);
+                    if (options.length > 0) {
+                        placeholders[question.id] = options.map(option => option.label).join(', ');
+                    }
                 } else if (question.type === 'text') {
                     const textInput = form.querySelector(`textarea[name="${question.id}"], input[name="${question.id}"]`);
                     if (textInput && textInput.value.trim() !== '') {
                         answers[question.id] = textInput.value.trim();
+                    }
+                    // Store placeholder value if no answer is given
+                    if (question.placeholder) {
+                        placeholders[question.id] = question.placeholder;
                     }
                 }
             });
@@ -203,11 +220,12 @@ function collectAnswers(groups, level = 1) {
 
         if (group.groups) {
             const subGroupAnswers = collectAnswers(group.groups, level + 1);
-            Object.assign(answers, subGroupAnswers);
+            Object.assign(answers, subGroupAnswers.answers);
+            Object.assign(placeholders, subGroupAnswers.placeholders);
         }
     });
 
-    return answers;
+    return { answers, placeholders };
 }
 
 // Generate text based on answers
