@@ -62,12 +62,17 @@ function fetchRepoFiles(repoUrl) {
                 select.appendChild(option);
             });
             select.style.display = 'block';
-            select.addEventListener('change', () => {
-                fetchYAML(select.value);
-            });
         })
         .catch(error => console.error('Error fetching the repository files:', error));
+
+    document.getElementById('yaml-files').addEventListener('change', () => {
+        const selectedUrl = document.getElementById('yaml-files').value;
+        if (selectedUrl) {
+            fetchYAML(selectedUrl);
+        }
+    });
 }
+
 
 // Display title and introduction
 function displayIntroduction(data) {
