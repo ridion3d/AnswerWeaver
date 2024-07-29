@@ -246,10 +246,12 @@ function generateText(groups, form, level = 1) {
                     if (question.pre_text) {
                         groupText += question.pre_text;
                     }
-                    let textBlock = question.text_block.replace('[USER_INPUT]', questionValue);
-                    // Replace placeholders
-                    textBlock = replacePlaceholders(textBlock, form);
-                    groupText += textBlock;
+                    if (question.text_block) {
+                        let textBlock = question.text_block.replace('[USER_INPUT]', questionValue);
+                        // Replace placeholders
+                        textBlock = replacePlaceholders(textBlock, form);
+                        groupText += textBlock;
+                    }
                     if (question.post_text) {
                         groupText += question.post_text;
                     }
