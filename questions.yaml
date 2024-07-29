@@ -58,7 +58,6 @@ groups:
         type: text
         multiline: false
         text_block: "Wohnort:\n**[USER_INPUT]**"
-        placeholder: "Hamburg"
         default_from: birth_place
         conditions:
           - id: same_as_birth_place
