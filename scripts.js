@@ -325,19 +325,24 @@ function generateText(groups, form, level = 1) {
                 if (question.type === 'multiple_choice' || question.type === 'checkbox') {
                     if (values.length > 0) {
                         values.forEach(value => {
-                            const option = question.options.find(opt => opt.id === value.id);
-                            if (question.pre_text) {
-                                groupText += question.pre_text;
+                            if (value.value === "") {
+                                return; // Skip processing if the none option is selected
                             }
-                            let textBlock = option.text_block;
-                            // Replace tokens
-                            textBlock = replaceTokens(textBlock, form);
-                            groupText += textBlock;
-                            if (question.post_text) {
-                                groupText += question.post_text;
+                            const option = question.options.find(opt => opt.id === value.value);
+                            if (option) {
+                                if (question.pre_text) {
+                                    groupText += question.pre_text;
+                                }
+                                let textBlock = option.text_block;
+                                // Replace tokens
+                                textBlock = replaceTokens(textBlock, form);
+                                groupText += textBlock;
+                                if (question.post_text) {
+                                    groupText += question.post_text;
+                                }
+                                groupText += '\n\n';
+                                hasContent = true;
                             }
-                            groupText += '\n\n';
-                            hasContent = true;
                         });
                     }
                 } else if (question.type === 'text') {
@@ -378,6 +383,7 @@ function generateText(groups, form, level = 1) {
 
     return text;
 }
+
 
 // Initial call to check conditions after loading the form
 document.addEventListener('DOMContentLoaded', () => {
