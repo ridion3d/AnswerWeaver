@@ -130,11 +130,17 @@ function appendQuestion(parentDiv, question) {
                     }
                 };
                 updateDefault();
-                defaultFromInput.addEventListener('input', updateDefault);
+                defaultFromInput.addEventListener('input', () => {
+                    updateDefault();
+                    generateFullText();
+                });
                 textInput.addEventListener('input', () => {
                     textInput.dataset.userChanged = 'true';
+                    generateFullText();
                 });
             }
+        } else {
+            textInput.addEventListener('input', () => generateFullText()); // Add input event listener
         }
 
         div.appendChild(textInput);
@@ -146,6 +152,15 @@ function appendQuestion(parentDiv, question) {
     const inputs = div.querySelectorAll('input');
     inputs.forEach(input => {
         input.addEventListener('change', () => {
+            checkConditions();
+            generateFullText();
+        });
+    });
+
+    // Add event listeners to update the text on input
+    const textareas = div.querySelectorAll('textarea, input[type="text"]');
+    textareas.forEach(textarea => {
+        textarea.addEventListener('input', () => {
             checkConditions();
             generateFullText();
         });
