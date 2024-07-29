@@ -1,28 +1,59 @@
-// Initialize SimpleMDE
-var simplemde = new SimpleMDE({
-    element: document.getElementById("result"),
-    initialValue: ""
+document.getElementById('load-url').addEventListener('click', () => {
+    const url = document.getElementById('url-input').value;
+    if (url) {
+        handleURL(url);
+    }
 });
 
-let allGroups = [];
-let introText = '';
-let outroText = '';
-
-// Load YAML from URL
-document.getElementById('load-yaml').addEventListener('click', () => {
-    const url = document.getElementById('yaml-url').value;
-    if (url) {
+function handleURL(url) {
+    if (isGitHubRepo(url)) {
+        fetchRepoFiles(url);
+    } else {
         fetchYAML(url);
     }
-});
+}
 
-// Load YAML files from GitHub repo
-document.getElementById('load-repo').addEventListener('click', () => {
-    const repoUrl = document.getElementById('repo-url').value;
-    if (repoUrl) {
-        fetchRepoFiles(repoUrl);
-    }
-});
+function isGitHubRepo(url) {
+    // Check if the URL is a GitHub repository URL
+    const githubRepoPattern = /^https:\/\/github\.com\/[^\/]+\/[^\/]+(\/|$)/;
+    return githubRepoPattern.test(url);
+}
+
+// Fetch YAML files from GitHub repo
+function fetchRepoFiles(repoUrl) {
+    const apiUrl = repoUrl.replace('github.com', 'api.github.com/repos') + '/contents';
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(files => {
+            const yamlFiles = files.filter(file => file.name.endsWith('.yaml') || file.name.endsWith('.yml'));
+            const select = document.createElement('select');
+            select.id = 'yaml-files';
+            select.className = 'form-control';
+            select.style.display = 'block';
+            document.querySelector('.container').insertBefore(select, document.querySelector('.row'));
+
+            select.innerHTML = '';
+            yamlFiles.forEach((file, index) => {
+                const option = document.createElement('option');
+                option.value = file.download_url;
+                option.textContent = file.name; // Temporärer Text, bis die Datei geladen wird
+                select.appendChild(option);
+
+                // Automatically load the first YAML file
+                if (index === 0) {
+                    fetchYAML(file.download_url);
+                }
+            });
+
+            select.addEventListener('change', () => {
+                const selectedUrl = select.value;
+                if (selectedUrl) {
+                    fetchYAML(selectedUrl);
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching the repository files:', error));
+}
 
 // Fetch YAML file from URL
 function fetchYAML(url) {
@@ -40,13 +71,6 @@ function fetchYAML(url) {
             allGroups = data.groups;
             introText = data.intro_text || '';
             outroText = data.outro_text || '';
-
-            // Update dropdown with friendly name or file name
-            const select = document.getElementById('yaml-files');
-            const option = select.querySelector(`option[value="${url}"]`);
-            if (option) {
-                option.textContent = data.friendly_name || option.textContent;
-            }
 
             // Set titles for questionnaire and generated text with defaults if not provided
             const sectionTitles = data.section_titles || {};
@@ -69,42 +93,6 @@ function resetForm() {
     document.getElementById('questionnaire').innerHTML = '';
     simplemde.value(''); // Clear the SimpleMDE editor
 }
-
-
-// Fetch YAML files from GitHub repo
-function fetchRepoFiles(repoUrl) {
-    const apiUrl = repoUrl.replace('github.com', 'api.github.com/repos') + '/contents';
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(files => {
-            const yamlFiles = files.filter(file => file.name.endsWith('.yaml') || file.name.endsWith('.yml'));
-            const select = document.getElementById('yaml-files');
-            select.innerHTML = '';
-            yamlFiles.forEach((file, index) => {
-                const option = document.createElement('option');
-                option.value = file.download_url;
-                option.textContent = file.name; // Temporärer Text, bis die Datei geladen wird
-                select.appendChild(option);
-
-                // Automatically load the first YAML file
-                if (index === 0) {
-                    fetchYAML(file.download_url);
-                }
-            });
-            select.style.display = 'block';
-        })
-        .catch(error => console.error('Error fetching the repository files:', error));
-
-    document.getElementById('yaml-files').addEventListener('change', () => {
-        const selectedUrl = document.getElementById('yaml-files').value;
-        if (selectedUrl) {
-            fetchYAML(selectedUrl);
-        }
-    });
-}
-
-
-
 
 // Display title and introduction
 function displayIntroduction(data) {
@@ -390,7 +378,6 @@ function generateText(groups, form, level = 1) {
 
     return text;
 }
-
 
 // Initial call to check conditions after loading the form
 document.addEventListener('DOMContentLoaded', () => {
