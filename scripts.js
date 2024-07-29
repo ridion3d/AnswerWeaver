@@ -126,7 +126,7 @@ function appendQuestion(parentDiv, question) {
             if (defaultFromInput) {
                 const updateDefault = () => {
                     if (textInput.dataset.userChanged !== 'true') {
-                        textInput.value = defaultFromInput.value;
+                        textInput.value = defaultFromInput.value || question.placeholder || '';
                     }
                 };
                 updateDefault();
