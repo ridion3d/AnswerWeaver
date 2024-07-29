@@ -77,7 +77,7 @@ function appendQuestion(parentDiv, question) {
             }
             div.innerHTML += `
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.id}" ${checked}>
+                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.id}" ${checked} ${option.default ? 'data-default="true"' : ''}>
                     <label class="form-check-label" for="${option.id}">${option.label}</label>
                 </div>
             `;
@@ -141,6 +141,12 @@ function appendQuestion(parentDiv, question) {
     checkConditions();
 }
 
+// Initial call to check conditions after loading the form
+document.addEventListener('DOMContentLoaded', () => {
+    checkConditions();
+    generateFullText(); // Generate initial text with default values
+});
+
 // Check conditions to show or hide questions
 function checkConditions() {
     const form = document.getElementById('questionnaire');
@@ -154,10 +160,19 @@ function checkConditions() {
             conditions.forEach(condition => {
                 const conditionQuestion = form.querySelector(`[name="${condition.id}"]`);
                 if (conditionQuestion) {
-                    const conditionMet = [...form.querySelectorAll(`[name="${condition.id}"]:checked`)]
-                        .map(input => input.value)
-                        .includes(condition.value);
-                    if (!conditionMet) {
+                    const checkedInputs = [...form.querySelectorAll(`[name="${condition.id}"]:checked`)];
+                    const conditionMet = checkedInputs.map(input => input.value).includes(condition.value);
+
+                    // Check for default selected option
+                    if (checkedInputs.length === 0) {
+                        const defaultOption = form.querySelector(`[name="${condition.id}"][value="${condition.value}"][data-default="true"]`);
+                        if (defaultOption) {
+                            defaultOption.checked = true;
+                            showQuestion = true;
+                        } else {
+                            showQuestion = false;
+                        }
+                    } else if (!conditionMet) {
                         showQuestion = false;
                     }
                 }
@@ -168,15 +183,7 @@ function checkConditions() {
     });
 }
 
-// Initial call to check conditions after loading the form
-document.addEventListener('DOMContentLoaded', () => {
-    checkConditions();
-    generateFullText(); // Generate initial text with default values
-});
 
-
-// Initial call to check conditions after loading the form
-document.addEventListener('DOMContentLoaded', checkConditions);
 
 
 // Generate full text including intro and outro
