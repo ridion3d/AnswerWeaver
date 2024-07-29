@@ -119,7 +119,6 @@ function appendQuestion(parentDiv, question) {
     checkConditions();
 }
 
-
 // Check conditions to show or hide questions
 function checkConditions() {
     const form = document.getElementById('questionnaire');
@@ -147,10 +146,12 @@ function checkConditions() {
 
 // Generate full text including intro and outro
 function generateFullText() {
-    let text = introText ? `${introText}\n\n` : '';
-    text += generateText(allGroups);
+    const answers = collectAnswers(allGroups);
+
+    let text = introText ? replacePlaceholders(introText, answers) + '\n\n' : '';
+    text += generateText(allGroups, answers);
     if (outroText) {
-        text += `\n\n${outroText}`;
+        text += '\n\n' + replacePlaceholders(outroText, answers);
     }
 
     simplemde.value(text); // Set the generated text in the SimpleMDE editor
@@ -164,13 +165,19 @@ function generateFullText() {
     }
 }
 
-// Generate text based on answers
-function generateText(groups, level = 1) {
+// Replace placeholders with answers
+function replacePlaceholders(text, answers) {
+    Object.keys(answers).forEach(key => {
+        text = text.replace(new RegExp(`\\[${key}\\]`, 'g'), answers[key]);
+    });
+    return text;
+}
+
+// Collect all answers first
+function collectAnswers(groups, level = 1) {
     const form = document.getElementById('questionnaire');
-    let text = '';
     const answers = {};
 
-    // Collect all answers first
     groups.forEach(group => {
         if (group.questions) {
             group.questions.forEach(question => {
@@ -189,12 +196,19 @@ function generateText(groups, level = 1) {
         }
 
         if (group.groups) {
-            const subGroupAnswers = generateText(group.groups, level + 1);
+            const subGroupAnswers = collectAnswers(group.groups, level + 1);
             Object.assign(answers, subGroupAnswers);
         }
     });
 
-    // Generate text with placeholders replaced by answers
+    return answers;
+}
+
+// Generate text based on answers
+function generateText(groups, answers, level = 1) {
+    const form = document.getElementById('questionnaire');
+    let text = '';
+
     groups.forEach(group => {
         let groupText = '';
         if (group.show_group_name !== false) {
@@ -214,9 +228,7 @@ function generateText(groups, level = 1) {
                                 }
                                 let textBlock = selectedOption.text_block;
                                 // Replace placeholders
-                                Object.keys(answers).forEach(key => {
-                                    textBlock = textBlock.replace(`[${key}]`, answers[key]);
-                                });
+                                textBlock = replacePlaceholders(textBlock, answers);
                                 groupText += textBlock;
                                 if (question.post_text) {
                                     groupText += question.post_text;
@@ -233,9 +245,7 @@ function generateText(groups, level = 1) {
                         }
                         let textBlock = question.text_block.replace('[USER_INPUT]', textInput.value.trim());
                         // Replace placeholders
-                        Object.keys(answers).forEach(key => {
-                            textBlock = textBlock.replace(`[${key}]`, answers[key]);
-                        });
+                        textBlock = replacePlaceholders(textBlock, answers);
                         groupText += textBlock;
                         if (question.post_text) {
                             groupText += question.post_text;
@@ -247,7 +257,7 @@ function generateText(groups, level = 1) {
         }
 
         if (group.groups) {
-            const subGroupText = generateText(group.groups, level + 1);
+            const subGroupText = generateText(group.groups, answers, level + 1);
             if (subGroupText) {
                 groupText += subGroupText;
             }
