@@ -166,14 +166,23 @@ function checkConditions() {
             }
 
             let showQuestion = conditions.every(condition => {
-                const conditionInput = form.querySelector(`[name="${condition.id}"]:checked, [name="${condition.id}"]`);
-                return conditionInput && ((conditionInput.type === 'radio' || conditionInput.type === 'checkbox') ? conditionInput.value === condition.value : conditionInput.value.trim() === condition.value);
+                const conditionInput = form.querySelector(`[name="${condition.id}"]`);
+                if (conditionInput) {
+                    if (conditionInput.type === 'radio' || conditionInput.type === 'checkbox') {
+                        const checkedInput = form.querySelector(`[name="${condition.id}"]:checked`);
+                        return checkedInput && checkedInput.value === condition.value;
+                    } else {
+                        return conditionInput.value.trim() === condition.value;
+                    }
+                }
+                return false;
             });
 
             questionDiv.style.display = showQuestion ? 'block' : 'none';
         });
     });
 }
+
 
 // Function to replace tokens with actual values
 function replaceTokens(text, form) {
