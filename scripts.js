@@ -119,10 +119,6 @@ function appendQuestion(parentDiv, question) {
             textInput.placeholder = question.placeholder;
         }
 
-        if (question.default_from) {
-            textInput.setAttribute('data-default-from', question.default_from);
-        }
-
         div.appendChild(textInput);
 
         textInput.addEventListener('input', () => {
@@ -151,6 +147,7 @@ function appendQuestion(parentDiv, question) {
         });
     });
 }
+
 
 // Function to check conditions
 function checkConditions() {
