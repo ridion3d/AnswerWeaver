@@ -172,6 +172,7 @@ function generateFullText() {
 }
 
 
+
 // Replace placeholders with answers or placeholders
 function replacePlaceholders(text, answers, placeholders) {
     Object.keys(answers).forEach(key => {
@@ -227,6 +228,7 @@ function collectAnswers(groups, level = 1) {
 
     return { answers, placeholders };
 }
+
 
 // Generate text based on answers
 function generateText(groups, answers, level = 1) {
