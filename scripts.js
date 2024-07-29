@@ -68,18 +68,26 @@ function appendQuestion(parentDiv, question) {
     div.innerHTML = `<label>${marked.parse(question.question)}</label>`;
 
     if (question.type === 'multiple_choice') {
+        let defaultSelected = false;
+
         question.options.forEach(option => {
+            const checked = option.default ? 'checked' : '';
+            if (option.default) {
+                defaultSelected = true;
+            }
             div.innerHTML += `
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.id}" ${option.default ? 'checked' : ''}>
+                    <input class="form-check-input" type="radio" name="${question.id}" id="${option.id}" value="${option.id}" ${checked}>
                     <label class="form-check-label" for="${option.id}">${option.label}</label>
                 </div>
             `;
         });
+
         if (question.none_option) {
+            const checked = defaultSelected ? '' : 'checked';
             div.innerHTML += `
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="${question.id}" id="${question.id}_none" value="">
+                    <input class="form-check-input" type="radio" name="${question.id}" id="${question.id}_none" value="" ${checked}>
                     <label class="form-check-label" for="${question.id}_none">${question.none_option}</label>
                 </div>
             `;
