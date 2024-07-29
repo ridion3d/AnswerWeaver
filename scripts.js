@@ -171,10 +171,8 @@ function generateFullText() {
     }
 }
 
-
-
 // Replace placeholders with answers or placeholders
-function replacePlaceholders(text, answers, placeholders) {
+function replacePlaceholders(text, answers, placeholders = {}) {
     Object.keys(answers).forEach(key => {
         text = text.replace(new RegExp(`\\[${key}\\]`, 'g'), answers[key]);
     });
@@ -185,6 +183,7 @@ function replacePlaceholders(text, answers, placeholders) {
     });
     return text;
 }
+
 
 
 // Collect all answers first
