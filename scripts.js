@@ -86,12 +86,21 @@ function appendQuestion(parentDiv, question) {
             `;
         });
     } else if (question.type === 'text') {
-        const textInput = document.createElement('textarea');
-        textInput.name = question.id;
-        textInput.rows = 4;
-        textInput.cols = 50;
-        div.appendChild(textInput);
-        textInput.addEventListener('input', () => generateFullText()); // Add input event listener
+        if (question.multiline) {
+            const textInput = document.createElement('textarea');
+            textInput.name = question.id;
+            textInput.rows = 4;
+            textInput.cols = 50;
+            div.appendChild(textInput);
+            textInput.addEventListener('input', () => generateFullText()); // Add input event listener
+        } else {
+            const textInput = document.createElement('input');
+            textInput.type = 'text';
+            textInput.name = question.id;
+            textInput.classList.add('form-control');
+            div.appendChild(textInput);
+            textInput.addEventListener('input', () => generateFullText()); // Add input event listener
+        }
     }
 
     parentDiv.appendChild(div);
@@ -169,7 +178,7 @@ function generateText(groups, level = 1) {
                         answers[question.id] = values.join(', ');
                     }
                 } else if (question.type === 'text') {
-                    const textInput = form.querySelector(`textarea[name="${question.id}"]`);
+                    const textInput = form.querySelector(`textarea[name="${question.id}"], input[name="${question.id}"]`);
                     if (textInput && textInput.value.trim() !== '') {
                         answers[question.id] = textInput.value.trim();
                     }
@@ -215,7 +224,7 @@ function generateText(groups, level = 1) {
                         });
                     }
                 } else if (question.type === 'text') {
-                    const textInput = form.querySelector(`textarea[name="${question.id}"]`);
+                    const textInput = form.querySelector(`textarea[name="${question.id}"], input[name="${question.id}"]`);
                     if (textInput && textInput.value.trim() !== '') {
                         if (question.pre_text) {
                             groupText += question.pre_text;
