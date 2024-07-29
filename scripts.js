@@ -157,29 +157,56 @@ function generateFullText() {
 function generateText(groups, level = 1) {
     const form = document.getElementById('questionnaire');
     let text = '';
+    const answers = {};
 
+    // Collect all answers first
+    groups.forEach(group => {
+        if (group.questions) {
+            group.questions.forEach(question => {
+                if (question.type === 'multiple_choice' || question.type === 'checkbox') {
+                    const values = [...form.querySelectorAll(`[name="${question.id}"]:checked`)].map(input => input.nextSibling.textContent.trim());
+                    if (values.length > 0) {
+                        answers[question.id] = values.join(', ');
+                    }
+                } else if (question.type === 'text') {
+                    const textInput = form.querySelector(`textarea[name="${question.id}"]`);
+                    if (textInput && textInput.value.trim() !== '') {
+                        answers[question.id] = textInput.value.trim();
+                    }
+                }
+            });
+        }
+
+        if (group.groups) {
+            const subGroupAnswers = generateText(group.groups, level + 1);
+            Object.assign(answers, subGroupAnswers);
+        }
+    });
+
+    // Generate text with placeholders replaced by answers
     groups.forEach(group => {
         let groupText = '';
         if (group.show_group_name !== false) {
             groupText += `${'#'.repeat(level + 2)} ${group.group_name}\n\n`;
         }
-        const formData = new FormData(form);
-        let hasContent = false;
 
         if (group.questions) {
             group.questions.forEach(question => {
-                const values = formData.getAll(question.id);
-
+                const values = form.querySelectorAll(`[name="${question.id}"]:checked`);
                 if (question.type === 'multiple_choice' || question.type === 'checkbox') {
                     if (values.length > 0) {
-                        hasContent = true;
                         values.forEach(value => {
-                            const selectedOption = question.options.find(option => option.id === value);
+                            const selectedOption = question.options.find(option => option.id === value.value);
                             if (selectedOption) {
                                 if (question.pre_text) {
                                     groupText += question.pre_text;
                                 }
-                                groupText += selectedOption.text_block;
+                                let textBlock = selectedOption.text_block;
+                                // Replace placeholders
+                                Object.keys(answers).forEach(key => {
+                                    textBlock = textBlock.replace(`[${key}]`, answers[key]);
+                                });
+                                groupText += textBlock;
                                 if (question.post_text) {
                                     groupText += question.post_text;
                                 }
@@ -190,11 +217,15 @@ function generateText(groups, level = 1) {
                 } else if (question.type === 'text') {
                     const textInput = form.querySelector(`textarea[name="${question.id}"]`);
                     if (textInput && textInput.value.trim() !== '') {
-                        hasContent = true;
                         if (question.pre_text) {
                             groupText += question.pre_text;
                         }
-                        groupText += question.text_block.replace('[USER_INPUT]', textInput.value.trim());
+                        let textBlock = question.text_block.replace('[USER_INPUT]', textInput.value.trim());
+                        // Replace placeholders
+                        Object.keys(answers).forEach(key => {
+                            textBlock = textBlock.replace(`[${key}]`, answers[key]);
+                        });
+                        groupText += textBlock;
                         if (question.post_text) {
                             groupText += question.post_text;
                         }
@@ -208,11 +239,10 @@ function generateText(groups, level = 1) {
             const subGroupText = generateText(group.groups, level + 1);
             if (subGroupText) {
                 groupText += subGroupText;
-                hasContent = true;
             }
         }
 
-        if (hasContent) {
+        if (groupText.trim() !== '') {
             text += groupText;
         }
     });
