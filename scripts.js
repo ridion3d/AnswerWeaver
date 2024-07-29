@@ -122,28 +122,15 @@ function appendQuestion(parentDiv, question) {
         }
 
         if (question.default_from) {
-            const defaultFromInput = document.querySelector(`[name="${question.default_from}"]`);
-            if (defaultFromInput) {
-                const updateDefault = () => {
-                    if (textInput.dataset.userChanged !== 'true') {
-                        textInput.value = defaultFromInput.value || question.placeholder || '';
-                    }
-                };
-                updateDefault();
-                defaultFromInput.addEventListener('input', () => {
-                    updateDefault();
-                    generateFullText();
-                });
-                textInput.addEventListener('input', () => {
-                    textInput.dataset.userChanged = 'true';
-                    generateFullText();
-                });
-            }
-        } else {
-            textInput.addEventListener('input', () => generateFullText()); // Add input event listener
+            textInput.setAttribute('data-default-from', question.default_from);
         }
 
         div.appendChild(textInput);
+
+        textInput.addEventListener('input', () => {
+            textInput.dataset.userChanged = 'true';
+            generateFullText();
+        });
     }
 
     parentDiv.appendChild(div);
@@ -170,65 +157,6 @@ function appendQuestion(parentDiv, question) {
     setTimeout(checkConditions, 0); // Ensure conditions are checked after initial render
 }
 
-
-// Check conditions to show or hide questions
-function checkConditions() {
-    const form = document.getElementById('questionnaire');
-    const questions = form.querySelectorAll('[data-question-id]');
-
-    questions.forEach(questionDiv => {
-        const conditions = JSON.parse(questionDiv.getAttribute('data-conditions'));
-        let showQuestion = true;
-
-        if (conditions.length > 0) {
-            conditions.forEach(condition => {
-                const conditionQuestion = form.querySelector(`[name="${condition.id}"]`);
-                if (conditionQuestion) {
-                    const checkedInputs = [...form.querySelectorAll(`[name="${condition.id}"]:checked`)];
-                    const conditionMet = checkedInputs.map(input => input.value).includes(condition.value);
-
-                    // Check for default selected option
-                    if (checkedInputs.length === 0) {
-                        const defaultOption = form.querySelector(`[name="${condition.id}"][value="${condition.value}"][data-default="true"]`);
-                        if (defaultOption) {
-                            defaultOption.checked = true;
-                            showQuestion = true;
-                        } else {
-                            showQuestion = false;
-                        }
-                    } else if (!conditionMet) {
-                        showQuestion = false;
-                    }
-                }
-            });
-        }
-
-        questionDiv.style.display = showQuestion ? 'block' : 'none';
-    });
-}
-
-
-// Generate full text including intro and outro
-function generateFullText() {
-    const form = document.getElementById('questionnaire');
-
-    let text = introText ? `${replacePlaceholders(introText, form)}\n\n` : '';
-    text += generateText(allGroups, form);
-    if (outroText) {
-        text += `\n\n${replacePlaceholders(outroText, form)}`;
-    }
-
-    simplemde.value(text); // Set the generated text in the SimpleMDE editor
-
-    // Toggle preview mode to ensure rendering
-    simplemde.togglePreview();
-
-    // Check if the editor is in preview mode, if not toggle it to preview mode
-    if (!simplemde.isPreviewActive()) {
-        simplemde.togglePreview(); // First toggle to preview mode
-    }
-}
-
 // Function to replace placeholders with actual values
 function replacePlaceholders(text, form) {
     return text.replace(/\[([^\]]+)\]/g, (_, key) => {
@@ -252,52 +180,26 @@ function replacePlaceholders(text, form) {
     });
 }
 
-
-
-
-
-// Collect all answers first
-function collectAnswers(groups, level = 1) {
+// Generate full text including intro and outro
+function generateFullText() {
     const form = document.getElementById('questionnaire');
-    const answers = {};
-    const placeholders = {};
 
-    groups.forEach(group => {
-        if (group.questions) {
-            group.questions.forEach(question => {
-                if (question.type === 'multiple_choice' || question.type === 'checkbox') {
-                    const values = [...form.querySelectorAll(`[name="${question.id}"]:checked`)].map(input => input.nextSibling.textContent.trim());
-                    if (values.length > 0) {
-                        answers[question.id] = values.join(', ');
-                    }
-                    // Store placeholder value if no answer is given
-                    const options = question.options.filter(option => option.default);
-                    if (options.length > 0) {
-                        placeholders[question.id] = options.map(option => option.label).join(', ');
-                    }
-                } else if (question.type === 'text') {
-                    const textInput = form.querySelector(`textarea[name="${question.id}"], input[name="${question.id}"]`);
-                    if (textInput && textInput.value.trim() !== '') {
-                        answers[question.id] = textInput.value.trim();
-                    }
-                    // Store placeholder value if no answer is given
-                    if (question.placeholder) {
-                        placeholders[question.id] = question.placeholder;
-                    }
-                }
-            });
-        }
+    let text = introText ? `${replacePlaceholders(introText, form)}\n\n` : '';
+    text += generateText(allGroups, form);
+    if (outroText) {
+        text += `\n\n${replacePlaceholders(outroText, form)}`;
+    }
 
-        if (group.groups) {
-            const subGroupAnswers = collectAnswers(group.groups, level + 1);
-            Object.assign(answers, subGroupAnswers.answers);
-            Object.assign(placeholders, subGroupAnswers.placeholders);
-        }
-    });
+    simplemde.value(text); // Set the generated text in the SimpleMDE editor
 
-    return { answers, placeholders };
+    // Toggle preview mode to ensure rendering
+    simplemde.togglePreview();
+
+    // Check if the editor is in preview mode, if not toggle it to preview mode
+    if (!simplemde.isPreviewActive()) {
+        simplemde.togglePreview(); // First toggle to preview mode
+    }
 }
-
 
 // Generate text based on answers
 function generateText(groups, form, level = 1) {
