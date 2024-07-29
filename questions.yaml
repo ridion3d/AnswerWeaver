@@ -17,21 +17,21 @@ groups:
         question: "Vorname:"
         type: text
         multiline: false
-        text_block: "[USER_INPUT]"
+        text_block: "Vorname:\n**[USER_INPUT]**"
         placeholder: "Max"
 
       - id: last_name
         question: "Nachname:"
         type: text
         multiline: false
-        text_block: "[USER_INPUT]"
+        text_block: "Nachname:\n**[USER_INPUT]**"
         placeholder: "Mustermann"
 
       - id: birth_date
         question: "Geburtsdatum:"
         type: text
         multiline: false
-        text_block: "[USER_INPUT]"
+        text_block: "Geburtsdatum:\n**[USER_INPUT]**"
         placeholder: "01.01.1970"
 
   - group_name: "Behandlungswünsche"
