@@ -35,6 +35,7 @@ function fetchYAML(url) {
         })
         .then(yamlText => {
             const data = jsyaml.load(yamlText);
+            resetForm(); // Reset the form before loading new data
             displayIntroduction(data);
             allGroups = data.groups;
             introText = data.intro_text || '';
@@ -52,6 +53,14 @@ function fetchYAML(url) {
             generateFullText(); // Generate initial text with default values
         })
         .catch(error => console.error('Error fetching the YAML file:', error));
+}
+
+// Function to reset the form
+function resetForm() {
+    document.getElementById('main-title').innerText = '';
+    document.getElementById('introduction').innerHTML = '';
+    document.getElementById('questionnaire').innerHTML = '';
+    simplemde.value(''); // Clear the SimpleMDE editor
 }
 
 
