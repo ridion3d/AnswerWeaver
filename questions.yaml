@@ -1,91 +1,100 @@
-title: "Personal Values Document"
+title: "Patientenverfügung"
 introduction: |
-  **Welcome to the creation of your personal values document.**
-  Please answer the following questions carefully to document your values and preferences.
+  **Patientenverfügung von [first_name] [last_name]**
+
+  Diese Patientenverfügung dient dazu, meinen Willen bezüglich medizinischer Behandlungen festzulegen, falls ich nicht mehr in der Lage sein sollte, selbst Entscheidungen zu treffen. Bitte berücksichtigen Sie meine nachstehenden Wünsche und Anweisungen.
 
 intro_text: |
-  **Personal Values and Preferences of [first_name] [last_name]**
-  
-  This document serves to record my personal values and preferences in the event that I am no longer able to make decisions independently. Please read the following instructions carefully and respect my wishes to ensure that my will is honored.
+  **Patientenverfügung**
+
+  Ich, [first_name] [last_name], geboren am [birth_date], erkläre hiermit meinen Willen bezüglich medizinischer Behandlungen für den Fall, dass ich nicht mehr in der Lage sein sollte, selbst Entscheidungen zu treffen.
 
 groups:
-  - group_name: "General Preferences"
-    show_group_name: true
-    questions:
-      - id: q1
-        question: "What are your general preferences?"
-        type: multiple_choice
-        pre_text: "This is an optional introductory text before the options."
-        post_text: "This is an optional concluding text after the selected option."
-        options:
-          - id: option1
-            label: "Option 1"
-            text_block: "I prefer option 1."
-            default: true
-          - id: option2
-            label: "Option 2"
-            text_block: "I prefer option 2."
-          - id: option3
-            label: "Option 3"
-            text_block: "I prefer option 3."
-
-  - group_name: "Personal Values"
-    show_group_name: true
-    questions:
-      - id: q2
-        question: "What values are important to you?"
-        type: checkbox
-        options:
-          - id: value1
-            label: "Value 1"
-            text_block: "Value 1 is important to me."
-          - id: value2
-            label: "Value 2"
-            text_block: "Value 2 is important to me."
-            default: true
-          - id: value3
-            label: "Value 3"
-            text_block: "Value 3 is important to me."
-
-  - group_name: "Personal Information"
+  - group_name: "Persönliche Informationen"
     show_group_name: true
     questions:
       - id: first_name
-        question: "What is your first name?"
+        question: "Vorname:"
         type: text
         multiline: false
-        text_block: "My first name is [USER_INPUT]."
-        placeholder: "Enter your first name"
+        text_block: "[USER_INPUT]"
+        placeholder: "Max"
 
       - id: last_name
-        question: "What is your last name?"
+        question: "Nachname:"
         type: text
         multiline: false
-        text_block: "My last name is [USER_INPUT]."
-        placeholder: "Enter your last name"
-        
-  - group_name: "Additional Comments"
-    show_group_name: false
+        text_block: "[USER_INPUT]"
+        placeholder: "Mustermann"
+
+      - id: birth_date
+        question: "Geburtsdatum:"
+        type: text
+        multiline: false
+        text_block: "[USER_INPUT]"
+        placeholder: "01.01.1970"
+
+  - group_name: "Behandlungswünsche"
+    show_group_name: true
     questions:
-      - id: q3
-        question: "Please provide any additional comments or information:"
+      - id: lebenserhaltende_massnahmen
+        question: "Wünschen Sie lebensverlängernde Maßnahmen?"
+        type: multiple_choice
+        pre_text: "In Situationen, in denen keine Aussicht auf Besserung besteht, "
+        post_text: " Dies ist mein ausdrücklicher Wille."
+        options:
+          - id: option1
+            label: "Ja"
+            text_block: "möchte ich, dass alle möglichen lebensverlängernden Maßnahmen ergriffen werden."
+            default: false
+          - id: option2
+            label: "Nein"
+            text_block: "möchte ich keine lebensverlängernden Maßnahmen erhalten."
+            default: true
+
+      - id: schmerzbehandlung
+        question: "Soll eine Schmerzbehandlung durchgeführt werden, auch wenn dies den Todeseintritt beschleunigen könnte?"
+        type: multiple_choice
+        options:
+          - id: option1
+            label: "Ja"
+            text_block: "Ich möchte, dass eine Schmerzbehandlung durchgeführt wird, selbst wenn dies den Todeseintritt beschleunigen könnte."
+            default: true
+          - id: option2
+            label: "Nein"
+            text_block: "Ich möchte keine Schmerzbehandlung, wenn dies den Todeseintritt beschleunigen könnte."
+            default: false
+
+  - group_name: "Sonstige Wünsche"
+    show_group_name: true
+    questions:
+      - id: organspende
+        question: "Sind Sie mit einer Organspende einverstanden?"
+        type: multiple_choice
+        options:
+          - id: option1
+            label: "Ja"
+            text_block: "Ich bin mit einer Organspende einverstanden."
+            default: true
+          - id: option2
+            label: "Nein"
+            text_block: "Ich bin nicht mit einer Organspende einverstanden."
+            default: false
+
+      - id: weitere_wuensche
+        question: "Gibt es weitere Wünsche oder Anmerkungen?"
         type: text
         multiline: true
-        pre_text: "Feel free to add any additional comments below:"
-        post_text: "Thank you for providing your comments."
-        text_block: "Additional comments: [USER_INPUT]"
-        placeholder: "Enter your comments here"
-        conditions:
-          - id: q2
-            value: value1
-        
-outro_text: |
-  **Confirmation of Values and Preferences**
-  
-  I, [first_name] [last_name], declare that I have created this document in full possession of my mental faculties and without external pressure. I ask that my wishes and instructions recorded in this document be respected and implemented in the event of decision-making.
+        text_block: "Weitere Wünsche: [USER_INPUT]"
+        placeholder: "Weitere Wünsche hier eingeben"
 
-  **Location:** [Location]
+outro_text: |
+  **Bestätigung**
+
+  Hiermit bestätige ich, [first_name] [last_name], dass ich diese Patientenverfügung im Vollbesitz meiner geistigen Kräfte und aus freiem Willen erstellt habe. Diese Verfügung soll ab dem heutigen Datum [current_date] gültig sein.
+
+  **Ort:** [place]
   
-  **Date:** [Date]
+  **Datum:** [current_date]
   
-  **Signature:** ______________________
+  **Unterschrift:** ______________________
