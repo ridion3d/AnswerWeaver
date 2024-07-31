@@ -1,7 +1,9 @@
 title: "Advance Healthcare Directive"
 introduction: "This document outlines my healthcare preferences in case I am unable to communicate them myself. Please read and follow my wishes as detailed below."
 intro_text: |
+  # Introduction
   The following document serves as my Advance Healthcare Directive. It expresses my values, beliefs, and preferences regarding medical treatment in situations where I am unable to communicate my wishes. My full name is [first_name] [last_name], I was born on [birth_date] in [birth_place], and I reside at [residence_place].
+
 outro_text: |
   ## Declaration of Advance Healthcare Directive
 
@@ -38,78 +40,68 @@ groups:
         text_block: "Birth Place: **[birth_place]**"
       - id: "is_residence_birth_place"
         type: "radio"
-        question: "Is your place of residence the same as your place of birth?"
+        question: "Is your current residence the same as your birthplace?"
         options:
-          - id: "residence_yes"
+          - id: "residence_same"
             label: "Yes"
             value: "yes"
-            text_block: "Residence Place: **[birth_place]**"
+            text_block: "Residence: **[birth_place]**"
             default: true
-          - id: "residence_no"
+          - id: "residence_different"
             label: "No"
             value: "no"
-            text_block: "Residence Place: **[residence_place]**"
-      - id: "residence_place"
-        type: "text"
-        question: "Where do you currently live?"
-        default_from: "birth_place"
+            text_block: ""
+    groups:
+      - group_name: "Residence Details"
         conditions:
           - id: "is_residence_birth_place"
-            value: "residence_no"
-
+            value: "residence_different"
+        questions:
+          - id: "residence_place"
+            type: "text"
+            question: "Current Residence"
+            text_block: "Residence: **[residence_place]**"
+            default_from: "birth_place"
   - group_name: "Healthcare Preferences"
     questions:
-      - id: "life_support"
+      - id: "terminal_condition"
         type: "radio"
-        question: "Do you wish to receive life-support treatment if you are in a terminal condition?"
-        pre_text: "In the event that I am in a terminal condition, "
-        post_text: " This decision reflects my personal values and wishes."
+        question: "In the event of a terminal condition, would you want life-prolonging measures?"
         options:
           - id: "life_support_yes"
             label: "Yes"
-            value: "yes"
-            text_block: "I wish to receive life-support treatment."
+            text_block: "I wish to receive all available life-prolonging measures."
+            pre_text: "Healthcare Decision: "
+            post_text: ""
           - id: "life_support_no"
             label: "No"
-            value: "no"
-            text_block: "I do not wish to receive life-support treatment."
-        none_option: "No preference"
-      - id: "pain_management"
+            text_block: "I do not wish to receive life-prolonging measures and prefer to be allowed to die naturally."
+            pre_text: "Healthcare Decision: "
+            post_text: ""
+        none_option: "None of the above"
+      - id: "organ_donation"
         type: "radio"
-        question: "Do you wish to receive pain management even if it may hasten your death?"
+        question: "Do you wish to donate your organs after death?"
         options:
-          - id: "pain_management_yes"
+          - id: "organ_yes"
             label: "Yes"
-            value: "yes"
-            text_block: "I wish to receive pain management even if it may hasten my death."
-          - id: "pain_management_no"
+            text_block: "I wish to donate my organs."
+            default: true
+          - id: "organ_no"
             label: "No"
-            value: "no"
-            text_block: "I do not wish to receive pain management if it may hasten my death."
-        none_option: "No preference"
-        default: "pain_management_yes"
-      - id: "organ_donor"
-        type: "radio"
-        question: "Are you willing to be an organ donor?"
-        options:
-          - id: "organ_donor_yes"
-            label: "Yes"
-            value: "yes"
-            text_block: "I am willing to be an organ donor."
-          - id: "organ_donor_no"
-            label: "No"
-            value: "no"
-            text_block: "I am not willing to be an organ donor."
-        none_option: "No preference"
-      - id: "organ_donor_details"
-        type: "text"
-        question: "Please specify any details regarding your organ donation preferences."
-        multiline: true
+            text_block: "I do not wish to donate my organs."
+        none_option: "None of the above"
+    groups:
+      - group_name: "Organ Donation Details"
         conditions:
-          - id: "organ_donor"
-            value: "organ_donor_yes"
-        text_block: "Organ Donation Details: [USER_INPUT]"
-
+          - id: "organ_donation"
+            value: "organ_yes"
+        questions:
+          - id: "organ_wishes"
+            type: "text"
+            question: "Please specify any specific wishes regarding organ donation"
+            multiline: true
+            text_block: "Organ Donation Wishes: **[USER_INPUT]**"
   - group_name: "Religious Preferences"
     questions:
       - id: "religious_affiliation"
