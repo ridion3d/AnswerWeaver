@@ -1,5 +1,9 @@
 title: "Advance Healthcare Directive"
-introduction: "This document outlines my healthcare preferences in case I am unable to communicate them myself. Please read and follow my wishes as detailed below."
+introduction: |
+  This questionnaire is designed to gather your preferences and values regarding healthcare decisions. Please provide your information and preferences in the fields below. Your responses will be used to create an Advance Healthcare Directive, which will guide your loved ones and healthcare providers in making decisions on your behalf if you are unable to do so yourself. 
+
+  Complete each section carefully and ensure that your answers reflect your true wishes. If you have any questions or need assistance, please consult with your healthcare provider or a legal professional.
+
 intro_text: |
   # Advance Healthcare Directive
   The following document serves as my Advance Healthcare Directive. It expresses my values, beliefs, and preferences regarding medical treatment in situations where I am unable to communicate my wishes. My full name is [first_name] [last_name], I was born on [birth_date] in [birth_place], and I reside at [residence_place].
