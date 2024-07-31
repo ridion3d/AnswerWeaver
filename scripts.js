@@ -23,9 +23,7 @@ function handleURLParameters() {
     const yamlURL = urlParams.get('yaml');
 
     if (yamlURL) {
-        document.getElementById('url-input').value = yamlURL;
-        document.getElementById('load-url').style.display = 'none';
-        document.getElementById('url-input').style.display = 'none';
+        document.getElementById('url-input-container').style.display = 'none';
         handleURL(yamlURL);
     }
 }
