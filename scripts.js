@@ -414,9 +414,25 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Block 4: Generate and Download Word Document
+function markdownToODT(content) {
+    const html = marked(content);
+    return html
+        .replace(/<h1>(.*?)<\/h1>/g, '<text:h text:style-name="Heading_20_1">$1</text:h>')
+        .replace(/<h2>(.*?)<\/h2>/g, '<text:h text:style-name="Heading_20_2">$1</text:h>')
+        .replace(/<h3>(.*?)<\/h3>/g, '<text:h text:style-name="Heading_20_3">$1</text:h>')
+        .replace(/<p>(.*?)<\/p>/g, '<text:p>$1</text:p>')
+        .replace(/<strong>(.*?)<\/strong>/g, '<text:span text:style-name="Bold">$1</text:span>')
+        .replace(/<em>(.*?)<\/em>/g, '<text:span text:style-name="Italic">$1</text:span>')
+        .replace(/<ul>/g, '<text:list text:style-name="Bullet_20_Symbols">')
+        .replace(/<\/ul>/g, '</text:list>')
+        .replace(/<li>(.*?)<\/li>/g, '<text:list-item><text:p>$1</text:p></text:list-item>');
+}
+
 function generateODT(content, filename) {
     const zip = new JSZip();
     zip.file("mimetype", "application/vnd.oasis.opendocument.text");
+
+    const odtContent = markdownToODT(content);
 
     const contentXml =
         `<?xml version="1.0" encoding="UTF-8"?>
@@ -447,7 +463,7 @@ function generateODT(content, filename) {
             office:version="1.2">
             <office:body>
                 <office:text>
-                    <text:p>${content}</text:p>
+                    ${odtContent}
                 </office:text>
             </office:body>
         </office:document-content>`;
