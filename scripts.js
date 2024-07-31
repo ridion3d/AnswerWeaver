@@ -295,14 +295,11 @@ function findValue(key, groups) {
 
 // Function to format date according to the specified format
 function formatDate(dateStr, format) {
-    const date = new Date(dateStr);
-    const options = {};
-
-    if (format.includes('yyyy')) options.year = 'numeric';
-    if (format.includes('mm')) options.month = '2-digit';
-    if (format.includes('dd')) options.day = '2-digit';
-
-    return date.toLocaleDateString(undefined, options);
+    const [year, month, day] = dateStr.split('-');
+    return format
+        .replace('dd', day)
+        .replace('mm', month)
+        .replace('yyyy', year);
 }
 
 // Function to replace tokens with actual values, including special tokens like current_date and current_time
