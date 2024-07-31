@@ -15,6 +15,8 @@ document.getElementById('load-url').addEventListener('click', () => {
     }
 });
 
+/* --- Block 1: URL Handling and Fetching --- */
+
 function handleURL(url) {
     if (isGitHubRepo(url)) {
         fetchRepoFiles(url);
@@ -105,6 +107,8 @@ function resetForm() {
     document.getElementById('questionnaire').innerHTML = '';
     simplemde.value(''); // Clear the SimpleMDE editor
 }
+
+/* --- Block 2: Display and Questionnaire Creation --- */
 
 // Display title and introduction
 function displayIntroduction(data) {
@@ -225,6 +229,7 @@ function appendQuestion(parentDiv, question) {
         });
     });
 }
+/* --- Block 3: Text Generation and Condition Checking --- */
 
 // Function to find the value from the allGroups structure
 function findValue(key, groups) {
