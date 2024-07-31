@@ -414,16 +414,22 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Block 4: Generate and Download Word Document
-const { Document, Packer, Paragraph, TextRun } = docx;
+function generateODT(content, filename) {
+    const zip = new JSZip();
+    zip.file("mimetype", "application/vnd.oasis.opendocument.text");
 
-function generateWordDoc(content, filename) {
-    const doc = new Document();
-    const paragraph = new Paragraph({
-        children: [new TextRun(content)],
-    });
-    doc.addSection({ children: [paragraph] });
+    const contentXml =
+        `<?xml version="1.0" encoding="UTF-8"?>
+        <office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0">
+            <office:body>
+                <office:text>
+                    <text:p>${content}</text:p>
+                </office:text>
+            </office:body>
+        </office:document-content>`;
 
-    Packer.toBlob(doc).then(blob => {
+    zip.file("content.xml", contentXml);
+    zip.generateAsync({ type: "blob" }).then(blob => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -437,6 +443,6 @@ function generateWordDoc(content, filename) {
 // Add event listener to the download button
 document.getElementById('download-word').addEventListener('click', () => {
     const content = simplemde.value();
-    generateWordDoc(content, 'generated_document.docx');
+    generateODT(content, 'generated_document.odt');
 });
 
