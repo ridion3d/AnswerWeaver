@@ -4,6 +4,7 @@ var simplemde = new SimpleMDE({
     initialValue: ""
 });
 
+let globalSettings = {}; // Global variable to store general settings from the YAML file
 let allGroups = [];
 let introText = '';
 let outroText = '';
@@ -94,14 +95,16 @@ function fetchYAML(url) {
             resetForm(); // Reset the form before loading new data
             displayIntroduction(data);
             allGroups = data.groups;
-            introText = data.intro_text || '';
-            outroText = data.outro_text || '';
-            globalDateFormat = data.global_date_format || ''; // Fetch global date format
+            globalSettings = { // Store global settings
+                intro_text: data.intro_text || '',
+                outro_text: data.outro_text || '',
+                global_date_format: data.global_date_format || '',
+                section_titles: data.section_titles || {}
+            };
 
             // Set titles for questionnaire and generated text with defaults if not provided
-            const sectionTitles = data.section_titles || {};
-            document.getElementById('questionnaire-title').innerHTML = marked.parse(sectionTitles.questionnaire || 'Questionnaire');
-            document.getElementById('generated-text-title').innerHTML = marked.parse(sectionTitles.generated_text || 'Generated Text');
+            document.getElementById('questionnaire-title').innerHTML = marked.parse(globalSettings.section_titles.questionnaire || 'Questionnaire');
+            document.getElementById('generated-text-title').innerHTML = marked.parse(globalSettings.section_titles.generated_text || 'Generated Text');
 
             createQuestionnaire(data.groups);
             checkConditions(); // Check conditions after creating the questionnaire
@@ -257,8 +260,6 @@ function appendQuestion(parentDiv, question) {
 
 /* --- Block 3: Text Generation and Condition Checking --- */
 
-let globalDateFormat = ''; // Define global date format
-
 // Function to find the value from the allGroups structure
 function findValue(key, groups) {
     for (const group of groups) {
@@ -270,7 +271,7 @@ function findValue(key, groups) {
                 // Check user input value
                 if (inputElement && inputElement.value.trim()) {
                     if (question.type === 'date') {
-                        const dateFormat = question.date_format || globalDateFormat;
+                        const dateFormat = question.date_format || globalSettings.global_date_format;
                         if (dateFormat) {
                             return formatDate(inputElement.value, dateFormat);
                         }
@@ -360,10 +361,10 @@ function checkConditions() {
 function generateFullText() {
     const form = document.getElementById('questionnaire');
 
-    let text = introText ? `${replaceTokens(introText, form)}\n\n` : '';
+    let text = globalSettings.intro_text ? `${replaceTokens(globalSettings.intro_text, form)}\n\n` : '';
     text += generateText(allGroups, form);
-    if (outroText) {
-        text += `\n\n${replaceTokens(outroText, form)}`;
+    if (globalSettings.outro_text) {
+        text += `\n\n${replaceTokens(globalSettings.outro_text, form)}`;
     }
 
     simplemde.value(text); // Set the generated text in the SimpleMDE editor
