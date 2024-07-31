@@ -96,6 +96,7 @@ function fetchYAML(url) {
             allGroups = data.groups;
             introText = data.intro_text || '';
             outroText = data.outro_text || '';
+            globalDateFormat = data.global_date_format || ''; // Fetch global date format
 
             // Set titles for questionnaire and generated text with defaults if not provided
             const sectionTitles = data.section_titles || {};
@@ -254,8 +255,9 @@ function appendQuestion(parentDiv, question) {
     });
 }
 
-
 /* --- Block 3: Text Generation and Condition Checking --- */
+
+let globalDateFormat = ''; // Define global date format
 
 // Function to find the value from the allGroups structure
 function findValue(key, groups) {
@@ -267,8 +269,11 @@ function findValue(key, groups) {
 
                 // Check user input value
                 if (inputElement && inputElement.value.trim()) {
-                    if (question.type === 'date' && question.date_format) {
-                        return formatDate(inputElement.value, question.date_format);
+                    if (question.type === 'date') {
+                        const dateFormat = question.date_format || globalDateFormat;
+                        if (dateFormat) {
+                            return formatDate(inputElement.value, dateFormat);
+                        }
                     }
                     return inputElement.value.trim();
                 }
