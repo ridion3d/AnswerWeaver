@@ -1,7 +1,18 @@
 title: "Advance Healthcare Directive"
 introduction: "This document outlines my healthcare preferences in case I am unable to communicate them myself. Please read and follow my wishes as detailed below."
-intro_text: "The following document serves as my Advance Healthcare Directive. It expresses my values, beliefs, and preferences regarding medical treatment in situations where I am unable to communicate my wishes. My full name is [first_name] [last_name], and I reside at [residence_place]."
-outro_text: "I, [first_name] [last_name], declare that I am of sound mind and that this document reflects my wishes regarding my healthcare preferences. This Advance Healthcare Directive is made after careful consideration and reflects my decisions about the treatments I want or do not want in the event that I am unable to communicate my wishes directly.\n\nI understand the implications of my choices and have discussed them with my loved ones and healthcare providers. I trust that my healthcare team will honor my decisions as outlined in this document.\n\nSigned in [residence_place] on [current_date].\n\n____________________________\nSignature"
+intro_text: |
+  The following document serves as my Advance Healthcare Directive. It expresses my values, beliefs, and preferences regarding medical treatment in situations where I am unable to communicate my wishes. My full name is [first_name] [last_name], I was born on [birth_date] in [birth_place], and I reside at [residence_place].
+outro_text: |
+  ## Declaration of Advance Healthcare Directive
+
+  I, [first_name] [last_name], declare that I am of sound mind and that this document reflects my wishes regarding my healthcare preferences. This Advance Healthcare Directive is made after careful consideration and reflects my decisions about the treatments I want or do not want in the event that I am unable to communicate my wishes directly.
+
+  I understand the implications of my choices and have discussed them with my loved ones and healthcare providers. I trust that my healthcare team will honor my decisions as outlined in this document.
+
+  Signed in [residence_place] on [current_date].
+
+  ____________________________
+  Signature
 
 section_titles:
   questionnaire: "Advance Healthcare Questionnaire"
