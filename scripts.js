@@ -355,7 +355,7 @@ function generateText(groups, form, level = 1) {
                                 if (question.pre_text) {
                                     groupText += question.pre_text;
                                 }
-                                let textBlock = option.text_block;
+                                let textBlock = option.text_block || ''; // Ensure text_block is defined
                                 // Replace tokens
                                 textBlock = replaceTokens(textBlock, form);
                                 groupText += textBlock;
@@ -373,7 +373,7 @@ function generateText(groups, form, level = 1) {
                         if (question.pre_text) {
                             groupText += question.pre_text;
                         }
-                        let textBlock = question.text_block.replace('[USER_INPUT]', textInput.value.trim());
+                        let textBlock = question.text_block ? question.text_block.replace('[USER_INPUT]', textInput.value.trim()) : '';
                         // Replace tokens
                         textBlock = replaceTokens(textBlock, form);
                         groupText += textBlock;
