@@ -92,7 +92,8 @@ groups:
         question: "Please specify any details regarding your organ donation preferences."
         multiline: true
         conditions:
-          - id: "organ_donor_yes"
+          - id: "organ_donor"
+            value: "organ_donor_yes"
         text_block: "Organ Donation Details: [USER_INPUT]"
 
   - group_name: "Religious Preferences"
