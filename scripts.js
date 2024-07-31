@@ -429,6 +429,7 @@ function generateText(groups, form, level = 1) {
 
 // Initial call to check conditions after loading the form
 document.addEventListener('DOMContentLoaded', () => {
+    handleURLParameters();
     const form = document.getElementById('questionnaire');
     checkConditions();
     generateFullText(); // Generate initial text with default values
