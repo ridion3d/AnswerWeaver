@@ -32,7 +32,7 @@ groups:
           - id: "residence_yes"
             label: "Yes"
             value: "yes"
-            text_block: "Residence Place: **[residence_place]**"
+            text_block: "Residence Place: **[birth_place]**"
             default: true
           - id: "residence_no"
             label: "No"
