@@ -416,7 +416,13 @@ document.addEventListener('DOMContentLoaded', () => {
 /* --- Block 4: Generate and Download ODT Document --- */
 
 function markdownToODT(content) {
-    const html = marked(content);
+    // Ensure marked is initialized correctly
+    if (typeof marked === 'undefined') {
+        console.error('Marked library is not loaded.');
+        return '';
+    }
+
+    const html = marked.parse(content);
     return html
         .replace(/<h1>(.*?)<\/h1>/g, '<text:h text:style-name="Heading_20_1">$1</text:h>')
         .replace(/<h2>(.*?)<\/h2>/g, '<text:h text:style-name="Heading_20_2">$1</text:h>')
@@ -428,6 +434,7 @@ function markdownToODT(content) {
         .replace(/<\/ul>/g, '</text:list>')
         .replace(/<li>(.*?)<\/li>/g, '<text:list-item><text:p>$1</text:p></text:list-item>');
 }
+
 
 function generateODT(content, filename) {
     const zip = new JSZip();
