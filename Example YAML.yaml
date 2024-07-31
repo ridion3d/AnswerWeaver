@@ -41,7 +41,6 @@ groups:
       - id: "residence_place"
         type: "text"
         question: "Where do you currently live?"
-        placeholder: "City, Country"
         default_from: "birth_place"
         conditions:
           - id: "is_residence_birth_place"
