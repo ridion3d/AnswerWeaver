@@ -417,12 +417,23 @@ document.addEventListener('DOMContentLoaded', () => {
 function copyToClipboard() {
     const content = simplemde.value();
     const htmlContent = marked.parse(content);
-    navigator.clipboard.writeText(htmlContent).then(() => {
+
+    // Create a new clipboard item with HTML content
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const clipboardItem = new ClipboardItem({ 'text/html': blob });
+
+    navigator.clipboard.write([clipboardItem]).then(() => {
         alert('HTML content copied to clipboard');
     }).catch(err => {
         console.error('Failed to copy text: ', err);
     });
 }
+
+// Add event listener to the copy to clipboard button
+document.getElementById('copy-to-clipboard').addEventListener('click', () => {
+    copyToClipboard();
+});
+
 
 // Add event listener to the copy to clipboard button
 document.getElementById('copy-to-clipboard').addEventListener('click', () => {
