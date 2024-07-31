@@ -200,11 +200,16 @@ function appendQuestion(parentDiv, question) {
                 </div>
             `;
         });
-    } else if (question.type === 'text') {
+    } else if (question.type === 'text' || question.type === 'date') {
         const multiline = question.multiline || false; // Default value is false
         let textInput;
 
-        if (multiline) {
+        if (question.type === 'date') {
+            textInput = document.createElement('input');
+            textInput.type = 'date';
+            textInput.name = question.id;
+            textInput.classList.add('form-control');
+        } else if (multiline) {
             textInput = document.createElement('textarea');
             textInput.name = question.id;
             textInput.rows = 4;
@@ -240,7 +245,7 @@ function appendQuestion(parentDiv, question) {
     });
 
     // Add event listeners to update the text on input
-    const textareas = div.querySelectorAll('textarea, input[type="text"]');
+    const textareas = div.querySelectorAll('textarea, input[type="text"], input[type="date"]');
     textareas.forEach(textarea => {
         textarea.addEventListener('input', () => {
             checkConditions();
@@ -248,6 +253,7 @@ function appendQuestion(parentDiv, question) {
         });
     });
 }
+
 
 /* --- Block 3: Text Generation and Condition Checking --- */
 
