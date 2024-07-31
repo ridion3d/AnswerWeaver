@@ -25,12 +25,6 @@ groups:
         question: "Where were you born?"
         placeholder: "City, Country"
         text_block: "Birth Place: **[birth_place]**"
-      - id: "residence_place"
-        type: "text"
-        question: "Where do you currently live?"
-        placeholder: "City, Country"
-        default_from: "birth_place"
-        text_block: "Residence Place: **[residence_place]**"
       - id: "is_residence_birth_place"
         type: "multiple_choice"
         question: "Is your place of residence the same as your place of birth?"
@@ -44,6 +38,15 @@ groups:
             value: "no"
             text_block: ""
         none_option: "Prefer not to say"
+      - id: "residence_place"
+        type: "text"
+        question: "Where do you currently live?"
+        placeholder: "City, Country"
+        default_from: "birth_place"
+        conditions:
+          - id: "is_residence_birth_place"
+            value: "residence_no"
+        text_block: "Residence Place: **[residence_place]**"
 
   - group_name: "Healthcare Preferences"
     questions:
