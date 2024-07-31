@@ -17,6 +17,19 @@ document.getElementById('load-url').addEventListener('click', () => {
 
 /* --- Block 1: URL Handling and Fetching --- */
 
+// Function to handle URL parameters
+function handleURLParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const yamlURL = urlParams.get('yaml');
+
+    if (yamlURL) {
+        document.getElementById('url-input').value = yamlURL;
+        document.getElementById('load-url').style.display = 'none';
+        document.getElementById('url-input').style.display = 'none';
+        handleURL(yamlURL);
+    }
+}
+
 function handleURL(url) {
     if (isGitHubRepo(url)) {
         fetchRepoFiles(url);
@@ -107,6 +120,14 @@ function resetForm() {
     document.getElementById('questionnaire').innerHTML = '';
     simplemde.value(''); // Clear the SimpleMDE editor
 }
+
+// Call the function to handle URL parameters when the document is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    handleURLParameters();
+    const form = document.getElementById('questionnaire');
+    checkConditions();
+    generateFullText(); // Generate initial text with default values
+});
 
 /* --- Block 2: Display and Questionnaire Creation --- */
 
