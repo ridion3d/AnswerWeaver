@@ -1,0 +1,58 @@
+title: "Sample Questionnaire"
+introduction: "Welcome to the sample questionnaire. Please answer the following questions."
+intro_text: "This is the introduction of the generated text."
+outro_text: "This is the conclusion of the generated text. Signed by [first_name] [last_name] on [current_date]."
+
+section_titles:
+  questionnaire: "Questionnaire"
+  generated_text: "Generated Text"
+
+groups:
+  - group_name: "Personal Information"
+    questions:
+      - id: "first_name"
+        type: "text"
+        question: "What is your first name?"
+        placeholder: "John"
+        text_block: "First Name: **[first_name]**"
+      - id: "last_name"
+        type: "text"
+        question: "What is your last name?"
+        placeholder: "Doe"
+        text_block: "Last Name: **[last_name]**"
+      - id: "birth_place"
+        type: "text"
+        question: "Where were you born?"
+        placeholder: "City, Country"
+        text_block: "Birth Place: **[birth_place]**"
+      - id: "residence_place"
+        type: "text"
+        question: "Where do you currently live?"
+        placeholder: "City, Country"
+        default_from: "birth_place"
+        text_block: "Residence Place: **[residence_place]**"
+
+  - group_name: "Health Preferences"
+    questions:
+      - id: "organ_donor"
+        type: "multiple_choice"
+        question: "Are you an organ donor?"
+        options:
+          - id: "yes"
+            label: "Yes"
+            value: "yes"
+            text_block: "The patient is an organ donor."
+          - id: "no"
+            label: "No"
+            value: "no"
+            text_block: "The patient is not an organ donor."
+        none_option: "None of the above"
+        default: "yes"
+      - id: "organ_donor_details"
+        type: "text"
+        question: "Please specify any details regarding your organ donation preferences."
+        multiline: true
+        conditions:
+          - id: "organ_donor"
+            value: "yes"
+        text_block: "Organ Donation Details: [USER_INPUT]"
