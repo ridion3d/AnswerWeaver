@@ -147,7 +147,7 @@ function appendQuestion(parentDiv, question) {
 
     div.innerHTML = `<label>${marked.parse(question.question)}</label>`;
 
-    if (question.type === 'multiple_choice') {
+    if (question.type === 'radio') {
         let defaultSelected = false;
 
         question.options.forEach(option => {
@@ -344,7 +344,7 @@ function generateText(groups, form, level = 1) {
         if (group.questions) {
             group.questions.forEach(question => {
                 const values = form.querySelectorAll(`[name="${question.id}"]:checked`);
-                if (question.type === 'multiple_choice' || question.type === 'checkbox') {
+                if (question.type === 'radio' || question.type === 'checkbox') {
                     if (values.length > 0) {
                         values.forEach(value => {
                             if (value.value === "") {
