@@ -46,7 +46,6 @@ groups:
         conditions:
           - id: "is_residence_birth_place"
             value: "residence_no"
-        text_block: "Residence Place: **[residence_place]**"
 
   - group_name: "Healthcare Preferences"
     questions:
