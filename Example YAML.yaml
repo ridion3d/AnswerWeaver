@@ -33,11 +33,11 @@ groups:
             label: "Yes"
             value: "yes"
             text_block: ""
+            default: true
           - id: "residence_no"
             label: "No"
             value: "no"
             text_block: ""
-        none_option: "Prefer not to say"
       - id: "residence_place"
         type: "text"
         question: "Where do you currently live?"
