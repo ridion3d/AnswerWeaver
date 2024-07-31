@@ -274,6 +274,8 @@ function findValue(key, groups) {
                         if (dateFormat) {
                             return formatDate(inputElement.value, dateFormat);
                         }
+                        // Use local date format if no specific format is provided
+                        return new Date(inputElement.value).toLocaleDateString();
                     }
                     return inputElement.value.trim();
                 }
