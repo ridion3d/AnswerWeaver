@@ -229,6 +229,7 @@ function appendQuestion(parentDiv, question) {
         });
     });
 }
+
 /* --- Block 3: Text Generation and Condition Checking --- */
 
 // Function to find the value from the allGroups structure
@@ -279,7 +280,6 @@ function replaceTokens(text, form) {
         return findValue(key, allGroups) || '';
     });
 }
-
 
 // Function to check conditions
 function checkConditions() {
@@ -413,7 +413,8 @@ document.addEventListener('DOMContentLoaded', () => {
     generateFullText(); // Generate initial text with default values
 });
 
-// Block 4: Generate and Download Word Document
+/* --- Block 4: Generate and Download ODT Document --- */
+
 function markdownToODT(content) {
     const html = marked(content);
     return html
@@ -485,3 +486,19 @@ document.getElementById('download-word').addEventListener('click', () => {
     const content = simplemde.value();
     generateODT(content, 'generated_document.odt');
 });
+
+// Function to copy the generated text to the clipboard
+function copyToClipboard() {
+    const content = simplemde.value();
+    navigator.clipboard.writeText(content).then(() => {
+        alert('Text copied to clipboard');
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+
+// Add event listener to the copy to clipboard button
+document.getElementById('copy-to-clipboard').addEventListener('click', () => {
+    copyToClipboard();
+});
+
