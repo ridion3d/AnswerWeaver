@@ -26,7 +26,7 @@ groups:
         placeholder: "City, Country"
         text_block: "Birth Place: **[birth_place]**"
       - id: "is_residence_birth_place"
-        type: "multiple_choice"
+        type: "radio"
         question: "Is your place of residence the same as your place of birth?"
         options:
           - id: "residence_yes"
