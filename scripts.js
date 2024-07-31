@@ -264,12 +264,22 @@ function findValue(key, groups) {
     return '';
 }
 
-// Function to replace tokens with actual values
+// Function to replace tokens with actual values, including special tokens like current_date and current_time
 function replaceTokens(text, form) {
+    const specialTokens = {
+        'current_date': () => new Date().toLocaleDateString(),
+        'current_time': () => new Date().toLocaleTimeString(),
+        // Add more special token functions here
+    };
+
     return text.replace(/\[([^\]]+)\]/g, (_, key) => {
+        if (specialTokens[key]) {
+            return specialTokens[key]();
+        }
         return findValue(key, allGroups) || '';
     });
 }
+
 
 // Function to check conditions
 function checkConditions() {
