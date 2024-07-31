@@ -412,3 +412,31 @@ document.addEventListener('DOMContentLoaded', () => {
     checkConditions();
     generateFullText(); // Generate initial text with default values
 });
+
+// Block 4: Generate and Download Word Document
+const { Document, Packer, Paragraph, TextRun } = docx;
+
+function generateWordDoc(content, filename) {
+    const doc = new Document();
+    const paragraph = new Paragraph({
+        children: [new TextRun(content)],
+    });
+    doc.addSection({ children: [paragraph] });
+
+    Packer.toBlob(doc).then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+}
+
+// Add event listener to the download button
+document.getElementById('download-word').addEventListener('click', () => {
+    const content = simplemde.value();
+    generateWordDoc(content, 'generated_document.docx');
+});
+
