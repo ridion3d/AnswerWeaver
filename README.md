@@ -1,92 +1,119 @@
 # AnswerWeaver
 
-AnswerWeaver is a flexible and customizable tool for generating documents based on answers from a questionnaire and predefined text blocks. By simply swapping out the YAML file, AnswerWeaver can be adapted for various use cases.
-
-## How It Works
-
-AnswerWeaver uses a YAML file to define questions and their associated text blocks. The user answers the questions in a web-based form, and AnswerWeaver automatically generates a document that reflects the user's responses.
+AnswerWeaver is a dynamic form generator that allows users to create complex questionnaires from YAML files and generate formatted text outputs based on user responses. The generated text can be used for various purposes, including patient directives, surveys, and other documentation.
 
 ## Features
 
-- **Flexible and Customizable**: Customize the questions and text blocks by editing the YAML file.
-- **Markdown Support**: Use Markdown to format your questions and text blocks.
-- **Automatic Text Generation**: Create documents based on user responses.
-- **Web-Based Form**: User-friendly web interface for answering questions.
+- **Dynamic Form Generation**: Create forms dynamically based on the structure provided in a YAML file.
+- **Support for Multiple Question Types**: Supports multiple-choice, checkboxes, and text input questions.
+- **Conditional Questions**: Display questions conditionally based on the answers to previous questions.
+- **Token Replacement**: Replace placeholders in text blocks with user-provided answers.
+- **Markdown Support**: Supports Markdown for formatting text in questions, section titles, and generated text.
+- **Default and Placeholder Values**: Define default answers and placeholder text for questions.
+- **Intro and Outro Text**: Include introductory and concluding text in the generated document.
+- **GitHub Integration**: Load YAML files directly from a GitHub repository.
 
-## Installation
+## Getting Started
+
+### Prerequisites
+
+- A web server to host the HTML, CSS, and JavaScript files.
+- Internet connection to fetch YAML files and other resources.
+
+### Installation
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/username/AnswerWeaver.git
+   ```
+   git clone https://github.com/yourusername/AnswerWeaver.git
    cd AnswerWeaver
    ```
 
-2. Open the `index.html` file in your preferred web browser.
+2. Open `index.html` in a web browser.
 
-## Usage
+### Usage
 
-1. Customize the `questions.yaml` file to suit your needs. Here is an example structure of the YAML file:
+1. Enter the URL of a YAML file or a GitHub repository containing YAML files into the provided input field.
+2. Click "Load URL" to fetch the YAML file(s).
+3. If a GitHub repository is loaded, select the desired YAML file from the dropdown menu.
+4. The form will be generated based on the selected YAML file.
+5. Fill out the form, and the generated text will be updated automatically based on your responses.
 
-   ```yaml
-   title: "Personal Values Document"
-   introduction: |
-     **Welcome to the creation of your personal values document.**
-     Please answer the following questions carefully to document your values and preferences.
+### YAML Structure
 
-   intro_text: |
-     **Personal Values and Preferences of [Name]**
-     
-     This document serves to record my personal values and preferences in the event that I am no longer able to make decisions independently. Please read the following instructions carefully and respect my wishes to ensure that my will is honored.
+Here is an example of the YAML structure used to define the form and generated text:
 
-   groups:
-     - group_name: "General Preferences"
-       questions:
-         - id: q1
-           question: "What are your general preferences?"
-           type: multiple_choice
-           options:
-             - id: option1
-               label: "Option 1"
-               text_block: "I prefer option 1."
+```yaml
+title: "Sample Questionnaire"
+introduction: "Welcome to the sample questionnaire. Please answer the following questions."
+intro_text: "This is the introduction of the generated text."
+outro_text: "This is the conclusion of the generated text. Signed by [first_name] [last_name] on [current_date]."
 
-             - id: option2
-               label: "Option 2"
-               text_block: "I prefer option 2."
+section_titles:
+  questionnaire: "Questionnaire"
+  generated_text: "Generated Text"
 
-             - id: option3
-               label: "Option 3"
-               text_block: "I prefer option 3."
+groups:
+  - group_name: "Personal Information"
+    questions:
+      - id: "first_name"
+        type: "text"
+        question: "What is your first name?"
+        placeholder: "John"
+        text_block: "First Name: **[first_name]**"
+      - id: "last_name"
+        type: "text"
+        question: "What is your last name?"
+        placeholder: "Doe"
+        text_block: "Last Name: **[last_name]**"
+      - id: "birth_place"
+        type: "text"
+        question: "Where were you born?"
+        placeholder: "City, Country"
+        text_block: "Birth Place: **[birth_place]**"
+      - id: "residence_place"
+        type: "text"
+        question: "Where do you currently live?"
+        placeholder: "City, Country"
+        default_from: "birth_place"
+        text_block: "Residence Place: **[residence_place]**"
 
-     - group_name: "Personal Values"
-       questions:
-         - id: q2
-           question: "What values are important to you?"
-           type: checkbox
-           options:
-             - id: value1
-               label: "Value 1"
-               text_block: "Value 1 is important to me."
+  - group_name: "Health Preferences"
+    questions:
+      - id: "organ_donor"
+        type: "multiple_choice"
+        question: "Are you an organ donor?"
+        options:
+          - id: "yes"
+            label: "Yes"
+            value: "yes"
+            text_block: "The patient is an organ donor."
+          - id: "no"
+            label: "No"
+            value: "no"
+            text_block: "The patient is not an organ donor."
+        none_option: "None of the above"
+        default: "yes"
+      - id: "organ_donor_details"
+        type: "text"
+        question: "Please specify any details regarding your organ donation preferences."
+        multiline: true
+        conditions:
+          - id: "organ_donor"
+            value: "yes"
+        text_block: "Organ Donation Details: [USER_INPUT]"
 
-             - id: value2
-               label: "Value 2"
-               text_block: "Value 2 is important to me."
-
-             - id: value3
-               label: "Value 3"
-               text_block: "Value 3 is important to me."
-
-   outro_text: |
-     **Confirmation of Values and Preferences**
-     
-     I, [Name], declare that I have created this document in full possession of my mental faculties and without external pressure. I ask that my wishes and instructions recorded in this document be respected and implemented in the event of decision-making.
-
-     **Location:** [Location]
-     
-     **Date:** [Date]
-     
-     **Signature:** ______________________
-   ```
+```
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License.
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request.
+
+## Acknowledgements
+
+- [SimpleMDE](https://simplemde.com/) for the Markdown editor.
+- [marked](https://marked.js.org/) for Markdown parsing.
+- [js-yaml](https://github.com/nodeca/js-yaml) for YAML parsing.
