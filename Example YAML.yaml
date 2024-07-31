@@ -37,7 +37,7 @@ groups:
         placeholder: "Doe"
         text_block: "Last Name: **[last_name]**"
       - id: "birth_date"
-        type: "text"
+        type: "date"
         question: "What is your birth date?"
         placeholder: "YYYY-MM-DD"
         text_block: "Birth Date: **[birth_date]**"
