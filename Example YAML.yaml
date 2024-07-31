@@ -116,14 +116,3 @@ groups:
             value: "no"
             text_block: "I do not wish to have religious ceremonies or rites performed."
         none_option: "No preference"
-
-outro_text: |
-  I, [first_name] [last_name], declare that I am of sound mind and that this document reflects my wishes regarding my healthcare preferences. This Advance Healthcare Directive is made after careful consideration and reflects my decisions about the treatments I want or do not want in the event that I am unable to communicate my wishes directly.
-
-  I understand the implications of my choices and have discussed them with my loved ones and healthcare providers. I trust that my healthcare team will honor my decisions as outlined in this document.
-
-  Signed in [residence_place] on [current_date].
-
-  ____________________________
-  Signature
-
