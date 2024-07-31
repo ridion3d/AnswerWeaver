@@ -267,6 +267,9 @@ function findValue(key, groups) {
 
                 // Check user input value
                 if (inputElement && inputElement.value.trim()) {
+                    if (question.type === 'date' && question.date_format) {
+                        return formatDate(inputElement.value, question.date_format);
+                    }
                     return inputElement.value.trim();
                 }
 
@@ -288,6 +291,18 @@ function findValue(key, groups) {
         }
     }
     return '';
+}
+
+// Function to format date according to the specified format
+function formatDate(dateStr, format) {
+    const date = new Date(dateStr);
+    const options = {};
+
+    if (format.includes('yyyy')) options.year = 'numeric';
+    if (format.includes('mm')) options.month = '2-digit';
+    if (format.includes('dd')) options.day = '2-digit';
+
+    return date.toLocaleDateString(undefined, options);
 }
 
 // Function to replace tokens with actual values, including special tokens like current_date and current_time
