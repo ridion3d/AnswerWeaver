@@ -44,7 +44,7 @@ groups:
       - id: "birth_date"
         type: "date"
         question: "What is your birth date?"
-        date_format: "mm:dd:yyyy"
+        date_format: "dd.mm.yyyy"
         text_block: "Birth Date: **[birth_date]**"
       - id: "birth_place"
         type: "text"
