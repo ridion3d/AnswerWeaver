@@ -413,10 +413,12 @@ function generateText(groups, form, level = 1) {
                         const option = question.options.find(opt => opt.id === value.value);
                         if (option) {
                             let textBlock = option.text_block || ''; // Ensure text_block is defined
-                            // Replace tokens
-                            textBlock = replaceTokens(textBlock, form);
-                            questionText += textBlock;
-                            questionHasContent = true;
+                            if (textBlock.trim() !== '') {
+                                // Replace tokens
+                                textBlock = replaceTokens(textBlock, form);
+                                questionText += textBlock;
+                                questionHasContent = true;
+                            }
                         }
                     });
 
@@ -437,14 +439,16 @@ function generateText(groups, form, level = 1) {
                             questionText += question.pre_text;
                         }
                         let textBlock = question.text_block ? question.text_block.replace('[USER_INPUT]', textInput.value.trim()) : '';
-                        // Replace tokens
-                        textBlock = replaceTokens(textBlock, form);
-                        questionText += textBlock;
-                        if (question.post_text) {
-                            questionText += question.post_text;
+                        if (textBlock.trim() !== '') {
+                            // Replace tokens
+                            textBlock = replaceTokens(textBlock, form);
+                            questionText += textBlock;
+                            if (question.post_text) {
+                                questionText += question.post_text;
+                            }
+                            questionText += '\n\n';
+                            hasContent = true;
                         }
-                        questionText += '\n\n';
-                        hasContent = true;
                     }
                 }
 
@@ -470,6 +474,7 @@ function generateText(groups, form, level = 1) {
 
     return text;
 }
+
 
 
 document.getElementById('copy-button').addEventListener('click', () => {
