@@ -479,10 +479,3 @@ function copyToClipboard() {
 document.getElementById('copy-to-clipboard').addEventListener('click', () => {
     copyToClipboard();
 });
-
-
-// Add event listener to the copy to clipboard button
-document.getElementById('copy-to-clipboard').addEventListener('click', () => {
-    copyToClipboard();
-});
-
