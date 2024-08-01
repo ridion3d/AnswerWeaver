@@ -457,23 +457,17 @@ function generateText(groups, form, level = 1) {
     return text;
 }
 
-// Function to copy the generated text as HTML to the clipboard
-function copyToClipboard() {
+document.getElementById('copy-button').addEventListener('click', () => {
     const content = simplemde.value();
     const htmlContent = marked.parse(content);
 
-    // Create a new clipboard item with HTML content
     const blob = new Blob([htmlContent], { type: 'text/html' });
-    const clipboardItem = new ClipboardItem({ 'text/html': blob });
+    const data = [new ClipboardItem({ 'text/html': blob })];
 
-    navigator.clipboard.write([clipboardItem]).then(() => {
-        alert('HTML content copied to clipboard');
+    navigator.clipboard.write(data).then(() => {
+        console.log('HTML content copied to clipboard');
     }).catch(err => {
-        console.error('Failed to copy text: ', err);
+        console.error('Error copying HTML content to clipboard', err);
     });
-}
-
-// Add event listener to the copy to clipboard button
-document.getElementById('copy-to-clipboard').addEventListener('click', () => {
-    copyToClipboard();
 });
+
