@@ -134,14 +134,6 @@ function resetForm() {
     simplemde.value(''); // Clear the SimpleMDE editor
 }
 
-// Call the function to handle URL parameters when the document is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    handleURLParameters();
-    const form = document.getElementById('questionnaire');
-    checkConditions();
-    generateFullText(); // Generate initial text with default values
-});
-
 /* --- Block 2: Display and Questionnaire Creation --- */
 
 // Display title and introduction
@@ -461,14 +453,6 @@ function generateText(groups, form, level = 1) {
 
     return text;
 }
-
-// Initial call to check conditions after loading the form
-document.addEventListener('DOMContentLoaded', () => {
-    handleURLParameters();
-    const form = document.getElementById('questionnaire');
-    checkConditions();
-    generateFullText(); // Generate initial text with default values
-});
 
 // Function to copy the generated text as HTML to the clipboard
 function copyToClipboard() {
