@@ -16,12 +16,12 @@ outro_text: |
 
   Signed in [residence_place] on [current_date].
 
-  <br><p style="font-family:monospace;">
+  <br>
   ┌────────────────────┬─────┬─────┬───────────┬─────────────────────────────┐
 
                     
   ├────────────────────┼──┴──┴──┴──┴──┴──┴──┴──┼─────────────────────────────┤
-   Location             Date                    Signature</p>
+   Location             Date                    Signature
 
 
 section_titles:
