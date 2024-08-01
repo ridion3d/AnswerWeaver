@@ -48,8 +48,15 @@ function handleURL(url) {
     if (isGitHubRepo(url)) {
         fetchRepoFiles(url);
     } else {
-        document.getElementById('dropdown-container').style.display = 'none'; // Hide dropdown if not a repo
-        fetchYAML(url);
+        document.getElementById('yaml-files').style.display = 'none'; // Hide dropdown if not a repo
+        fetchYAML(url)
+            .then(() => {
+                document.getElementById('url-container').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error fetching the YAML file:', error);
+                document.getElementById('url-container').style.display = 'flex';
+            });
     }
 }
 
