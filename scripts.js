@@ -423,9 +423,8 @@ function generateText(groups, form, level = 1) {
                     });
 
                     if (questionHasContent) {
-                        
                         if (question.pre_text) {
-                            questionText += question.pre_text;
+                            questionText = question.pre_text + questionText;
                         }
                         if (question.text_block) {
                             questionText = `${'#'.repeat(level + 3)} ${replaceTokens(question.text_block, form)}\n\n` + questionText;
@@ -439,9 +438,6 @@ function generateText(groups, form, level = 1) {
                 } else if (question.type === 'text') {
                     const textInput = form.querySelector(`textarea[name="${question.id}"], input[name="${question.id}"]`);
                     if (textInput && textInput.value.trim() !== '') {
-                        if (question.text_block) {
-                            questionText = `${'#'.repeat(level + 3)} ${replaceTokens(question.text_block, form)}\n\n`;
-                        }
                         if (question.pre_text) {
                             questionText += question.pre_text;
                         }
@@ -449,6 +445,9 @@ function generateText(groups, form, level = 1) {
                         if (textBlock.trim() !== '') {
                             // Replace tokens
                             textBlock = replaceTokens(textBlock, form);
+                            if (question.text_block) {
+                                questionText = `${'#'.repeat(level + 3)} ${replaceTokens(question.text_block, form)}\n\n` + questionText;
+                            }
                             questionText += textBlock;
                             if (question.post_text) {
                                 questionText += question.post_text;
@@ -481,10 +480,6 @@ function generateText(groups, form, level = 1) {
 
     return text;
 }
-
-
-
-
 
 document.getElementById('copy-button').addEventListener('click', () => {
     const content = simplemde.value();
