@@ -424,7 +424,7 @@ function generateText(groups, form, level = 1) {
                             }
                         });
 
-                        if (question.post_text) {
+                        if (hasContent && question.post_text) {
                             questionText += question.post_text;
                         }
                         questionText += '\n\n';
@@ -469,7 +469,6 @@ function generateText(groups, form, level = 1) {
 
     return text;
 }
-
 
 document.getElementById('copy-button').addEventListener('click', () => {
     const content = simplemde.value();
