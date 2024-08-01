@@ -17,8 +17,12 @@ outro_text: |
   Signed in [residence_place] on [current_date].
 
   <br>
-  └─────────────────────────────┘
-  Signature
+  ┌─────────────────────┬─────┬─────┬───────────┬───────────────────────────────┐
+  
+  <br>                    
+  ├─────────────────────┼──┴──┴──┴──┴──┴──┴──┴──┼───────────────────────────────┤
+   Location        Date                    Signature
+
 
 section_titles:
   questionnaire: "Advance Healthcare Questionnaire"
