@@ -76,7 +76,6 @@ groups:
       - id: "has_allergies"
         type: "radio"
         question: "Do you have any allergies?"
-        text_block: "Allergies"
         options:
           - id: "allergies_yes"
             label: "Yes"
@@ -86,6 +85,7 @@ groups:
       - id: "medication_allergies"
         type: "checkbox"
         question: "Do you have any known medication allergies?"
+        text_block: "Allergies"
         pre_text: "Known medication allergies:\n\n"
         options:
           - id: "allergy_penicillin"
