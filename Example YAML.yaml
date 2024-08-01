@@ -16,7 +16,7 @@ outro_text: |
 
   Signed in [residence_place] on [current_date].
 
-  <br><span style="font-family:Monospace; font-size:4em;">
+  <br><span style="font-family:monospace;">
   ┌────────────────────┬─────┬─────┬───────────┬─────────────────────────────┐
 
                     
