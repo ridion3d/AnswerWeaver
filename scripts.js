@@ -28,10 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check for the default YAML file in the same directory
         const defaultYamlFile = 'default.yaml'; // Change this to the desired default YAML file name
         fetchYAML(defaultYamlFile)
+            .then(() => {
+                document.getElementById('url-container').style.display = 'none';
+            })
             .catch(error => {
                 console.log(error.message);
                 // If the default file is not found, show the input and button for URL loading
-                document.getElementById('url-container').style.display = 'block';
+                document.getElementById('url-container').style.display = 'flex';
             });
     }
 
