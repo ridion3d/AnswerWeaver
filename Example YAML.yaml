@@ -85,7 +85,7 @@ groups:
       - id: "medication_allergies"
         type: "checkbox"
         question: "Do you have any known medication allergies?"
-        text_block: "Allergies"
+        heading: "Allergies"
         pre_text: "Known medication allergies:\n\n"
         options:
           - id: "allergy_penicillin"
