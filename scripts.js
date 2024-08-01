@@ -91,7 +91,7 @@ function fetchRepoFiles(repoUrl) {
                 }
             });
 
-            document.getElementById('dropdown-container').style.display = 'block'; // Show dropdown
+            select.style.display = 'block'; // Show dropdown
         })
         .catch(error => console.error('Error fetching the repository files:', error));
 }
