@@ -427,7 +427,7 @@ function generateText(groups, form, level = 1) {
                             questionText = `${'#'.repeat(level + 3)} ${replaceTokens(question.text_block, form)}\n\n` + questionText;
                         }
                         if (question.pre_text) {
-                            questionText = question.pre_text + questionText;
+                            questionText = questionText + question.pre_text;
                         }
                         if (question.post_text) {
                             questionText += question.post_text;
@@ -480,6 +480,7 @@ function generateText(groups, form, level = 1) {
 
     return text;
 }
+
 
 
 
