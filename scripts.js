@@ -426,8 +426,8 @@ function generateText(groups, form, level = 1) {
                         if (question.pre_text) {
                             questionText = question.pre_text + questionText;
                         }
-                        if (question.text_block) {
-                            questionText = `${'#'.repeat(level + 3)} ${replaceTokens(question.text_block, form)}\n\n` + questionText;
+                        if (question.heading) {
+                            questionText = `${'#'.repeat(level + 3)} ${replaceTokens(question.heading, form)}\n\n` + questionText;
                         }
                         if (question.post_text) {
                             questionText += question.post_text;
@@ -445,8 +445,8 @@ function generateText(groups, form, level = 1) {
                         if (textBlock.trim() !== '') {
                             // Replace tokens
                             textBlock = replaceTokens(textBlock, form);
-                            if (question.text_block) {
-                                questionText = `${'#'.repeat(level + 3)} ${replaceTokens(question.text_block, form)}\n\n` + questionText;
+                            if (question.heading) {
+                                questionText = `${'#'.repeat(level + 3)} ${replaceTokens(question.heading, form)}\n\n` + questionText;
                             }
                             questionText += textBlock;
                             if (question.post_text) {
@@ -480,6 +480,7 @@ function generateText(groups, form, level = 1) {
 
     return text;
 }
+
 
 document.getElementById('copy-button').addEventListener('click', () => {
     const content = simplemde.value();
