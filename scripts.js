@@ -16,18 +16,30 @@ document.getElementById('load-url').addEventListener('click', () => {
     }
 });
 
-/* --- Block 1: URL Handling and Fetching --- */
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('questionnaire');
 
-// Function to handle URL parameters
-function handleURLParameters() {
     const urlParams = new URLSearchParams(window.location.search);
-    const yamlURL = urlParams.get('yaml');
+    const yamlUrl = urlParams.get('yaml');
 
-    if (yamlURL) {
-        document.getElementById('url-input-container').style.display = 'none';
-        handleURL(yamlURL);
+    if (yamlUrl) {
+        handleURL(yamlUrl);
+    } else {
+        // Check for the default YAML file in the same directory
+        const defaultYamlFile = 'default.yaml'; // Change this to the desired default YAML file name
+        fetchYAML(defaultYamlFile)
+            .catch(error => {
+                console.log(error.message);
+                // If the default file is not found, show the input and button for URL loading
+                document.getElementById('url-container').style.display = 'block';
+            });
     }
-}
+
+    checkConditions();
+    generateFullText(); // Generate initial text with default values
+});
+
+/* --- Block 1: URL Handling and Fetching --- */
 
 function handleURL(url) {
     if (isGitHubRepo(url)) {
@@ -83,7 +95,7 @@ function fetchRepoFiles(repoUrl) {
 
 // Fetch YAML file from URL
 function fetchYAML(url) {
-    fetch(url)
+    return fetch(url)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
@@ -109,8 +121,7 @@ function fetchYAML(url) {
             createQuestionnaire(data.groups);
             checkConditions(); // Check conditions after creating the questionnaire
             generateFullText(); // Generate initial text with default values
-        })
-        .catch(error => console.error('Error fetching the YAML file:', error));
+        });
 }
 
 // Function to reset the form
