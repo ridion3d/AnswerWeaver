@@ -164,6 +164,7 @@ groups:
         type: "text"
         question: "What is your religious affiliation, if any?"
         placeholder: "e.g., Christianity, Islam, None"
+        heading: "Religion"
         text_block: "Religious Affiliation: **[religious_affiliation]**"
       - id: "religious_ceremonies"
         type: "radio"
