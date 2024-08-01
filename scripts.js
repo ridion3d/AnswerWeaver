@@ -403,31 +403,32 @@ function generateText(groups, form, level = 1) {
             group.questions.forEach(question => {
                 const values = form.querySelectorAll(`[name="${question.id}"]:checked`);
                 let questionText = '';
+                let questionHasContent = false;
 
                 if (question.type === 'radio' || question.type === 'checkbox') {
-                    if (values.length > 0) {
-                        if (question.pre_text) {
-                            questionText += question.pre_text;
+                    values.forEach(value => {
+                        if (value.value === "") {
+                            return; // Skip processing if the none option is selected
                         }
+                        const option = question.options.find(opt => opt.id === value.value);
+                        if (option) {
+                            let textBlock = option.text_block || ''; // Ensure text_block is defined
+                            // Replace tokens
+                            textBlock = replaceTokens(textBlock, form);
+                            questionText += textBlock;
+                            questionHasContent = true;
+                        }
+                    });
 
-                        values.forEach(value => {
-                            if (value.value === "") {
-                                return; // Skip processing if the none option is selected
-                            }
-                            const option = question.options.find(opt => opt.id === value.value);
-                            if (option) {
-                                let textBlock = option.text_block || ''; // Ensure text_block is defined
-                                // Replace tokens
-                                textBlock = replaceTokens(textBlock, form);
-                                questionText += textBlock;
-                                hasContent = true;
-                            }
-                        });
-
-                        if (hasContent && question.post_text) {
+                    if (questionHasContent) {
+                        if (question.pre_text) {
+                            questionText = question.pre_text + questionText;
+                        }
+                        if (question.post_text) {
                             questionText += question.post_text;
                         }
                         questionText += '\n\n';
+                        hasContent = true;
                     }
                 } else if (question.type === 'text') {
                     const textInput = form.querySelector(`textarea[name="${question.id}"], input[name="${question.id}"]`);
@@ -469,6 +470,7 @@ function generateText(groups, form, level = 1) {
 
     return text;
 }
+
 
 document.getElementById('copy-button').addEventListener('click', () => {
     const content = simplemde.value();
