@@ -402,46 +402,52 @@ function generateText(groups, form, level = 1) {
         if (group.questions) {
             group.questions.forEach(question => {
                 const values = form.querySelectorAll(`[name="${question.id}"]:checked`);
+                let questionText = '';
+
                 if (question.type === 'radio' || question.type === 'checkbox') {
                     if (values.length > 0) {
+                        if (question.pre_text) {
+                            questionText += question.pre_text;
+                        }
+
                         values.forEach(value => {
                             if (value.value === "") {
                                 return; // Skip processing if the none option is selected
                             }
                             const option = question.options.find(opt => opt.id === value.value);
                             if (option) {
-                                if (question.pre_text) {
-                                    groupText += question.pre_text;
-                                }
                                 let textBlock = option.text_block || ''; // Ensure text_block is defined
                                 // Replace tokens
                                 textBlock = replaceTokens(textBlock, form);
-                                groupText += textBlock;
-                                if (question.post_text) {
-                                    groupText += question.post_text;
-                                }
-                                groupText += '\n\n';
+                                questionText += textBlock;
                                 hasContent = true;
                             }
                         });
+
+                        if (question.post_text) {
+                            questionText += question.post_text;
+                        }
+                        questionText += '\n\n';
                     }
                 } else if (question.type === 'text') {
                     const textInput = form.querySelector(`textarea[name="${question.id}"], input[name="${question.id}"]`);
                     if (textInput && textInput.value.trim() !== '') {
                         if (question.pre_text) {
-                            groupText += question.pre_text;
+                            questionText += question.pre_text;
                         }
                         let textBlock = question.text_block ? question.text_block.replace('[USER_INPUT]', textInput.value.trim()) : '';
                         // Replace tokens
                         textBlock = replaceTokens(textBlock, form);
-                        groupText += textBlock;
+                        questionText += textBlock;
                         if (question.post_text) {
-                            groupText += question.post_text;
+                            questionText += question.post_text;
                         }
-                        groupText += '\n\n';
+                        questionText += '\n\n';
                         hasContent = true;
                     }
                 }
+
+                groupText += questionText;
             });
         }
 
@@ -463,6 +469,7 @@ function generateText(groups, form, level = 1) {
 
     return text;
 }
+
 
 document.getElementById('copy-button').addEventListener('click', () => {
     const content = simplemde.value();
